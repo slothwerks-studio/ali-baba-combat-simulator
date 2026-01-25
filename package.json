@@ -1,0 +1,17 @@
+{
+  "name": "ali-baba-combat-simulator",
+  "version": "1.0.0",
+  "description": "A TypeScript combat simulator based on the 1982 Apple II game Ali Baba and the Forty Thieves",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": ["combat", "simulator", "typescript", "ali-baba"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
