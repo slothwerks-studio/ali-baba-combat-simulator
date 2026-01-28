@@ -75,7 +75,7 @@ Based on classic AD&D-inspired rules:
 - TypeScript (ES2020)
 - Functional programming approach
 - HTML5 & CSS3
-- ES Modules
+- ES Modules bundled with esbuild
 - GitHub Pages deployment
 - Prettier for code formatting
 - ESLint with TypeScript support for code quality
@@ -137,10 +137,12 @@ npm run dev
 
 ### Available Scripts
 
-- **`npm run build`** - Full production build (clean, lint, compile, copy)
+- **`npm run build`** - Full production build (clean, lint, compile, copy, bundle)
+- **`npm run serve`** - Start local dev server at http://localhost:8080
 - **`npm run dev`** - Watch mode for TypeScript compilation
 - **`npm run clean`** - Remove dist/ folder
 - **`npm run compile`** - Compile TypeScript to JavaScript
+- **`npm run bundle`** - Bundle all JS modules into single file with esbuild
 - **`npm run copy`** - Copy static assets to dist/
 - **`npm run format`** - Format all files with Prettier
 - **`npm run lint`** - Check code quality with ESLint
@@ -150,17 +152,19 @@ Note: The build process automatically runs linting before compilation to catch i
 
 ### Running the Web Interface
 
-After building, open `dist/index.html` in a web browser, or use a local development server:
+After building, you can run the app locally:
 
 ```bash
-# Using Python 3
-cd dist && python3 -m http.server 8000
+# Recommended: Use the built-in development server
+npm run serve
 
-# Using Node.js http-server (install globally: npm i -g http-server)
-cd dist && http-server
+# Or use Python 3
+cd dist && python3 -m http.server 8000
 ```
 
-Then navigate to `http://localhost:8000`
+Then navigate to `http://localhost:8080` (or `http://localhost:8000` for Python)
+
+**Important:** The app uses ES modules which require a web server due to browser CORS restrictions. Opening `dist/index.html` directly as a file will not work in modern browsers.
 
 ## Deployment
 

@@ -7,10 +7,12 @@
   "scripts": {
     "prebuild": "npm run lint && node scripts/generate-version.js",
     "clean": "rm -rf dist",
-    "copy": "mkdir -p dist && cp public/index.html public/styles.css dist/",
+    "copy": "mkdir -p dist && cp public/index.html public/styles.css public/favicon.ico dist/",
     "compile": "tsc",
-    "build": "npm run clean && npm run compile && npm run copy",
+    "bundle": "esbuild dist/js/app.js --bundle --format=esm --outfile=dist/js/bundle.js --sourcemap",
+    "build": "npm run clean && npm run compile && npm run copy && npm run bundle",
     "dev": "tsc --watch",
+    "serve": "http-server dist -p 8080 -o",
     "format": "prettier --write .",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"
@@ -26,8 +28,10 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
+    "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
+    "http-server": "^14.1.1",
     "prettier": "^3.8.1",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.54.0"
