@@ -1,6 +1,8 @@
 // Character and Creature Data
 
-const CHARACTERS = [
+import type { Character } from './types';
+
+export const CHARACTERS: Character[] = [
   {
     name: "Thorin the Dwarf",
     characterType: "dwarf",
@@ -43,7 +45,7 @@ const CHARACTERS = [
   }
 ];
 
-const CREATURES = [
+export const CREATURES: Character[] = [
   {
     name: "Goblin Scout",
     characterType: "goblin",
