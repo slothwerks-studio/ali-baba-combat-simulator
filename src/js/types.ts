@@ -1,8 +1,12 @@
 // Type definitions for the combat simulator
 
+export type WeaponType = 'dagger' | 'sword';
+
+export type CharacterType = 'human' | 'elf' | 'halfling' | 'dwarf' | 'thief' | 'other';
+
 export interface Weapon {
   name: string;
-  weaponType: string;
+  type: WeaponType;
   power: number;
 }
 
@@ -14,11 +18,11 @@ export interface Armor {
 
 export interface Character {
   name: string;
-  characterType: string;
+  type: CharacterType;
   strength: number;
   baseDexterity: number;
   maxLifeForce: number;
-  weapon: Weapon;
+  sword: Weapon;
   dagger: Weapon;
   armor: Armor;
 }
