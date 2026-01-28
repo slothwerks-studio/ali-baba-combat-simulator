@@ -33,6 +33,7 @@ export interface Combatant extends Character {
   lastAction: string | null;
   effectiveDexterity: number;
   isWeak: boolean;
+  isTackled: boolean;
 }
 export interface CharacterTypeAdjustments {
   adjacentAttack?: number;

@@ -45,7 +45,8 @@ function initializeCombatant(data: Character): Combatant {
     isUnconscious: false,
     lastAction: null,
     effectiveDexterity: 0,
-    isWeak: false
+    isWeak: false,
+    isTackled: false
   };
   
   const armorPenalty = combatant.armor?.dexterityPenalty ?? 0;
@@ -69,7 +70,7 @@ export function initCombat(player: Character, enemy: Character): void {
 }
 
 // Get current weapon based on combat range
-function getCurrentWeapon(combatant: Combatant): Weapon {
+export function getCurrentWeapon(combatant: Combatant): Weapon {
   if (combatState.range === 'close_quarters') {
     return combatant.closeWeapon;
   }
@@ -123,6 +124,10 @@ export function rollInitiative(): void {
 
 // Switch turns
 export function nextTurn(): void {
+  // Clear any tackled status
+  if (combatState.player) combatState.player.isTackled = false;
+  if (combatState.enemy) combatState.enemy.isTackled = false;
+  
   combatState.currentTurn = combatState.currentTurn === 'player' ? 'enemy' : 'player';
   combatState.turnCount++;
 }
@@ -173,11 +178,12 @@ export function attack(attacker: Combatant, defender: Combatant, isDefending: bo
   const attackerTotal = attackerRoll + attacker.effectiveDexterity + attackBonus;
 
   const defenderBonus = isDefending ? 5 : 0;
+  const defenderPenalty = defender.isTackled ? -5 : 0;
   const defenderRoll = d20();
-  const defenderTotal = defenderRoll + defender.effectiveDexterity + defenderBonus;
+  const defenderTotal = defenderRoll + defender.effectiveDexterity + defenderBonus + defenderPenalty;
 
   log(`Attack roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity}${attackBonus > 0 ? ` + Bonus: ${attackBonus}` : ''})`);
-  log(`Defense roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity}${defenderBonus > 0 ? ` + Defend: ${defenderBonus}` : ''})`);
+  log(`Defense roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity}${defenderBonus > 0 ? ` + Defend: ${defenderBonus}` : ''}${defenderPenalty < 0 ? ` - Tackled: ${defenderPenalty}` : ''})`);
 
   if (attackerTotal > defenderTotal) {
     log(`Hit! ${attackerName} lands a blow!`);
@@ -293,6 +299,7 @@ export function tackle(attacker: Combatant, defender: Combatant): boolean {
   log(`Resist roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity})`);
 
   if (attackerTotal > defenderTotal) {
+    defender.isTackled = true;
     log(`Success! ${attackerName} tackles ${defenderName} into close quarters!`);
     combatState.range = 'close_quarters';
     return true;
@@ -381,16 +388,4 @@ function endCombat(victor: 'player' | 'enemy' | 'fled'): void {
 // Logging
 function log(message: string): void {
   combatState.combatLog.push(message);
-}
-
-// Get current combatant
-export function getCurrentCombatant(): Combatant | null {
-  if (!combatState.player || !combatState.enemy) return null;
-  return combatState.currentTurn === 'player' ? combatState.player : combatState.enemy;
-}
-
-// Get opponent of a combatant
-export function getOpponent(combatant: Combatant): Combatant | null {
-  if (!combatState.player || !combatState.enemy) return null;
-  return combatant === combatState.player ? combatState.enemy : combatState.player;
 }

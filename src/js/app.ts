@@ -13,8 +13,7 @@ import {
   runAway,
   attemptWakeUp,
   nextTurn,
-  getCurrentCombatant,
-  getOpponent
+  getCurrentWeapon
 } from './engine';
 
 // App state
@@ -29,14 +28,6 @@ const appState: AppState = {
   selectedCreature: null,
   isProcessing: false
 };
-
-// Get current weapon based on range
-function getCurrentWeapon(combatant: Combatant) {
-  if (combatState.range === 'close_quarters') {
-    return combatant.closeWeapon;
-  }
-  return combatant.adjacentWeapon;
-}
 
 // Calculate difficulty rating for creatures
 function getDifficulty(creature: Character): string {
