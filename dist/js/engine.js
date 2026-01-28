@@ -3,8 +3,7 @@ import { d20, roll } from './dice';
 import { CHARACTER_TYPE_DEFINITIONS } from './data';
 const MAX_INITIATIVE_RETRIES = 10;
 // Mutable combat state
-// eslint-disable-next-line prefer-const
-export let combatState = {
+export const combatState = {
     player: null,
     enemy: null,
     range: 'adjacent',
@@ -187,9 +186,11 @@ function calculateDamage(attacker, defender) {
     parts.push(`Weapon: ${weapon.power}`);
     if (damageBonus > 0)
         parts.push(`Bonus: ${damageBonus}`);
-    if (armorStrength > 0)
-        parts.push(`AC: -${armorStrength}`);
-    log(`Damage: ${finalDamage} (${parts.join(' + ')})`);
+    let calculation = parts.join(' + ');
+    if (armorStrength > 0) {
+        calculation += ` - AC: ${armorStrength}`;
+    }
+    log(`Damage: ${finalDamage} (${calculation})`);
     return finalDamage;
 }
 // Apply damage

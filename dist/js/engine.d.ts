@@ -14,7 +14,7 @@ export interface CombatState {
     turnCount: number;
     initiativeRetries: number;
 }
-export declare let combatState: CombatState;
+export declare const combatState: CombatState;
 export declare function initCombat(player: Character, enemy: Character): void;
 export declare function getCurrentWeapon(combatant: Combatant): Weapon;
 export declare function rollInitiative(): void;

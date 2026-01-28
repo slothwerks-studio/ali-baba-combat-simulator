@@ -242,9 +242,13 @@ function calculateDamage(attacker: Combatant, defender: Combatant): number {
   parts.push(`STR: ${strRoll}`);
   parts.push(`Weapon: ${weapon.power}`);
   if (damageBonus > 0) parts.push(`Bonus: ${damageBonus}`);
-  if (armorStrength > 0) parts.push(`AC: -${armorStrength}`);
 
-  log(`Damage: ${finalDamage} (${parts.join(' + ')})`);
+  let calculation = parts.join(' + ');
+  if (armorStrength > 0) {
+    calculation += ` - AC: ${armorStrength}`;
+  }
+
+  log(`Damage: ${finalDamage} (${calculation})`);
 
   return finalDamage;
 }
