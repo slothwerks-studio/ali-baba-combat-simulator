@@ -183,7 +183,7 @@ export function attack(attacker: Combatant, defender: Combatant, isDefending: bo
   const defenderTotal = defenderRoll + defender.effectiveDexterity + defenderBonus + defenderPenalty;
 
   log(`Attack roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity}${attackBonus > 0 ? ` + Bonus: ${attackBonus}` : ''})`);
-  log(`Defense roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity}${defenderBonus > 0 ? ` + Defend: ${defenderBonus}` : ''}${defenderPenalty < 0 ? ` - Tackled: ${defenderPenalty}` : ''})`);
+  log(`Defense roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity}${defenderBonus > 0 ? ` + Defend: ${defenderBonus}` : ''}${defenderPenalty < 0 ? ` - Tackled: ${Math.abs(defenderPenalty)}` : ''})`);
 
   if (attackerTotal > defenderTotal) {
     log(`Hit! ${attackerName} lands a blow!`);
@@ -314,7 +314,6 @@ export function disengage(attacker: Combatant, defender: Combatant): boolean {
   if (!combatState.player || !combatState.enemy) return false;
   
   const attackerName = attacker === combatState.player ? combatState.player.name : combatState.enemy.name;
-  const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
 
   log(`${attackerName}'s Turn`);
   log(`${attackerName} attempts to disengage from close quarters!`);

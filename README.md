@@ -41,7 +41,7 @@ The combat simulator uses the following character attributes:
 ## Features
 
 - **4 Playable Characters**: Dwarf, Halfling, Elf, and Human - each with unique combat bonuses
-- **4 Enemy Creatures**: Face off against Goblins, Orcs, Trolls, and Shadow Assassins
+- **4 Enemy Creatures**: Face off against a Thief (Jami), Zombie, Tiger, or Dragon
 - **Turn-Based Combat**: Initiative-based combat with alternating turns
 - **Multiple Combat Actions**:
   - Attack with sword or dagger
@@ -62,17 +62,18 @@ Based on classic AD&D-inspired rules:
 - **Damage**: `random(1, STR) + Weapon Power - Armor Class`
 - **Status Effects**: Characters become weak at 50% HP (STR -3), unconscious at 10% HP
 - **Character Bonuses**: 
-  - **Dwarves**: +3 damage with swords, +2 to hit in close quarters
-  - **Humans**: +3 damage with swords
-  - **Halflings**: +3 damage in close quarters
-  - **Elves**: +3 damage in close quarters
+  - **Dwarves**: +3 damage at adjacent range, +2 to hit in close quarters
+  - **Humans**: +3 damage at adjacent range
+  - **Halflings**: +3 to hit in close quarters
+  - **Elves**: +3 to hit in close quarters
 
 ## Tech Stack
 
 - TypeScript (ES2020)
+- Functional programming approach
 - HTML5 & CSS3
-- Node.js build tooling
-- Deployed via GitHub Pages
+- ES Modules
+- GitHub Pages deployment
 
 ## Documentation
 
@@ -82,15 +83,22 @@ Based on classic AD&D-inspired rules:
 ## Project Structure
 
 ```
-docs/               # GitHub Pages deployment folder
-  index.html        # Main application
-  styles.css        # Styling
-  js/
-    app.js          # UI controller
-    engine.js       # Combat engine
-    data.js         # Character/creature data
-    dice.js         # Random number utilities
-src/js/             # Source files (copied to docs)
+src/js/             # TypeScript source files
+  app.ts            # UI controller
+  engine.ts         # Combat engine
+  data.ts           # Character/creature data & type definitions
+  dice.ts           # Random number utilities
+  types.ts          # TypeScript type definitions
+  version.ts        # Auto-generated version info
+public/             # Static HTML/CSS assets
+  index.html        # Main HTML file
+  styles.css        # Application styles
+dist/               # Build output (deployed to GitHub Pages)
+  index.html        # Copied from public/
+  styles.css        # Copied from public/
+  js/               # Compiled JavaScript from TypeScript
+scripts/            # Build scripts
+  generate-version.js
 combat.md           # Combat design document
 MVP.md              # Phase 1 implementation spec
 ```
@@ -108,27 +116,39 @@ MVP.md              # Phase 1 implementation spec
 npm install
 ```
 
-2. Build the TypeScript source:
+2. Build the project (compile TypeScript + copy assets to dist/):
 ```bash
 npm run build
 ```
 
-3. Development mode (auto-rebuild on changes):
+3. Development mode (auto-rebuild TypeScript on changes):
 ```bash
 npm run dev
 ```
 
 ### Running the Web Interface
 
-Simply open `docs/index.html` in a web browser to run the deployed version.
+After building, open `dist/index.html` in a web browser, or use a local development server:
 
-The source TypeScript files in `src/js/` are compiled to `dist/` (configured but currently allowing JS files).
+```bash
+# Using Python 3
+cd dist && python3 -m http.server 8000
+
+# Using Node.js http-server (install globally: npm i -g http-server)
+cd dist && http-server
+```
+
+Then navigate to `http://localhost:8000`
 
 ## Deployment
 
-The project is configured to deploy to GitHub Pages. Deployment will be automated via GitHub Actions to build and deploy when pushing to the `main` branch.
+The project is deployed to GitHub Pages from the `dist/` folder. The `dist/` folder is committed to the repository and contains the built application ready for deployment.
 
-> **Note**: Deployment automation is planned. Manual deployment instructions will be added once the CI/CD pipeline is configured.
+To deploy:
+1. Build the project: `npm run build`
+2. Commit the changes including `dist/`
+3. Push to GitHub
+4. Merge changes to `main`; GitHub Pages will automatically serve from the `dist/` folder
 
 ## Future Enhancements
 

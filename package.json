@@ -12,10 +12,16 @@
     "build": "npm run clean && npm run compile && npm run copy",
     "dev": "tsc --watch"
   },
-  "keywords": ["combat", "simulator", "typescript", "ali-baba"],
+  "keywords": [
+    "combat",
+    "simulator",
+    "typescript",
+    "ali-baba"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "prettier": "^3.8.1",
     "typescript": "^5.3.3"
   }
 }
