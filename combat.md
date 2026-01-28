@@ -236,14 +236,14 @@ Ali Baba has different **character types** (dwarf, halfling, human, elf) that re
 **Design Decision Needed**: Exact values for these bonuses (suggest: +2 to +5 range for balance)
 
 ## Questions to Address
-1. ~~How does Ali Baba handle initiative/turn order?~~ **ANSWERED**
-2. What's the exact hit chance formula? (DEX vs. DEX? vs. fixed target?)
-3. Exact damage formula? STR + Weapon Power - AC? Or different?
-4. What are the tactical advantages of wrestling vs. adjacent combat? (just weapon type, or other bonuses?)
-5. Does low Life Force penalize combat ability?
-6. DEX check DC for Tackle and Disengage actions?
-7. Does STR affect to-hit, or only damage?
-8. How does Defend action modify combat math exactly?
+1. What are the tactical advantages of wrestling vs. adjacent combat? (just weapon type, or other bonuses?)
+2. What exact bonuses do character types get? (values TBD)
+3. Unconscious threshold? (10% of max HP? Fixed value?)
+4. Wake-up roll mechanics for unconscious characters?
+5. Attacking unconscious: auto-hit or just no defense roll?
+6. DEX modifier: raw DEX or scaled down?
+7. Defend action bonus value? (currently +5, needs playtesting)
+8. Do critical hits exist beyond weapon impale mechanic?
 
 ---
 
@@ -292,30 +292,27 @@ Otherwise: MISS
 
 **Formula**:
 ```
-Raw Damage = random(1, STR) + Weapon_Power
-Final Damage = max(0, Raw_Damage - target_AC)
+raw_damage = random(1, STR) + weapon_power
+final_damage = max(0, raw_damage - target_AC)
 ```
 
 **Where**:
 - `random(1, STR)` = random integer between 1 and STR (inclusive)
-- `Weapon_Power` = static value from weapon (11-14 for swords, ~11 for daggers)
+- `weapon_power` = static value from weapon (11-14 for swords, ~11 for daggers)
 - `target_AC` = target's Armor Class
 - Minimum damage = 0 (heavy armor can completely negate weak hits)
 
 **Reasoning**:
 - Weapon Power represents consistent weapon quality
-- STR roll represents swing effectiveness/effort✅ DEX roll once, then alternating**
-2. ~~Which hit formula approach?~~ **✅ Opposed DEX rolls**
-3. ~~Which damage formula approach?~~ **✅ random(1,STR) + Weapon_Power - AC**
-4. ~~Tackle/Disengage mechanics?~~ **✅ Opposed DEX rolls**
-5. ~~Does low Life Force penalize combat ability?~~ **✅ No, until unconscious**
-6. What exact bonuses do character types get? (values TBD)
-7. Unconscious threshold? (10% of max HP? Fixed value?)
-8. Wake-up roll mechanics for unconscious characters?
-9. Attacking unconscious: auto-hit or just no defense roll?
-10. DEX modifier: raw DEX or scaled down?
-11. Defend action bonus value? (currently +5, needs playtesting)
-12. Do critical hits exist beyond weapon impale mechanic
+- STR roll represents swing effectiveness/effort
+- Armor Class directly reduces damage, making heavy armor very effective against weak attackers
+
+### Tackle/Disengage Mechanics ✅ DECIDED
+
+**Opposed DEX Rolls**:
+```
+Attacker Roll: 1d20 + attacker_effective_DEX
+Defender Roll: 1d20 + defender_effective_DEX
 
 If attacker_roll > defender_roll: SUCCESS
 Otherwise: FAIL
@@ -326,27 +323,26 @@ Otherwise: FAIL
 - Uses same opposed roll system as combat
 - Character remains in original position if maneuver fails
 
-### Low HP / Unconscious Mechanics ⚠️ NEEDS REFINEMENT
+### Low HP / Unconscious Mechanics ✅ DECIDED
 
 **Observed Behavior**:
 - Characters can land heavy blows even when heavily damaged
 - Game displays "feeling rather weak" message at certain HP threshold (~50%?)
-- This message suggests **possible combat penalty** when wounded
+- This message indicates combat penalty when wounded
 
-**"Weak" Status** (below ~50% Life Force):
-- Game indicates weakness, but exact penalty unknown
-- **Possible penalties** (need to decide):
-  - Reduced STR for damage calculation (-2 to -5?)
-  - Reduced effective DEX for hit/defense rolls (-2 to -5?)
-  - Reduced maximum STR roll (e.g., random(1, STR/2) instead of random(1, STR))?
-  - Combination of above?
-- Needs playtesting to determine if penalty exists and what feels right
+**"Weak" Status** (below 50% Life Force):
+- Combatant is flagged as weak when `currentLifeForce < maxLifeForce * 0.5`
+- **Combat Penalty**: -3 to effective STR for damage calculation
+  - When weak: `effectiveStrength = max(1, strength - 3)`
+  - This reduces the STR component in damage formula: `random(1, effectiveStrength) + weapon_power - target_AC`
+- Weak combatants deal less damage but can still attack normally
+- DEX is not affected (to-hit rolls remain unchanged)
 
-**Unconscious Threshold** (below ~10% Life Force):
-- Character falls unconscious
+**Unconscious Threshold** (below 10% Life Force):
+- Character falls unconscious when `currentLifeForce <= maxLifeForce * 0.1`
 - While unconscious:
   - **Cannot take actions** (no attack/defend/maneuver)
-  - **Rolls each turn to wake up** (proposed: 1d20, need 10+ to wake)
+  - **Rolls each turn to wake up** (1d20, need 10+ to wake)
   - If successful: regains consciousness, can act normally
   - If failed: remains unconscious
   
@@ -355,10 +351,8 @@ Otherwise: FAIL
 - Effectively auto-hit (attacker roll just needs >0)
 - Normal damage calculation applies
 
-**Design Decisions Needed**: 
-- Does "weak" status actually impose penalties? If so, what?
-- Exact HP thresholds for "weak" (50%?) and unconscious (10%?)
-- Wake-up roll mechanics (currently proposed: 1d20 >= 10)
+**Open Questions**: 
+- Wake-up roll mechanics (currently: 1d20 >= 10, may need adjustment)
 
 ---
 
@@ -460,17 +454,9 @@ Need to determine exact bonus amounts:
 
 ---
 
-### Questions to Address
-1. ~~How does Ali Baba handle initiative/turn order?~~ **ANSWERED - DEX-based rolls**
-2. Should initiative re-roll each round, or determine once?
-3. Which hit formula approach? (Opposed rolls vs. single roll)
-4. Which damage formula approach? (What gets randomized?)
-5. What are the tactical advantages of wrestling vs. adjacent combat? (just weapon type, or other bonuses?)
-6. Does low Life Force penalize combat ability?
-7. DEX check DC for Tackle and Disengage actions?
-8. Does STR affect to-hit, or only damage?
-9. How does Defend action modify combat math? (+2? +4? Advantage on roll?)
-10. Do critical hits exist (natural 20)? Critical failures (natural 1)?
+### Open Questions
+1. Should initiative re-roll each round, or determine once? (Current: determine once, then alternate)
+2. Do critical hits exist (natural 20)? Critical failures (natural 1)?
 
 ---
 
