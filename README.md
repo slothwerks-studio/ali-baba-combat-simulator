@@ -14,6 +14,16 @@ This project simulates the combat mechanics from the [classic Ali Baba game](htt
 
 ## Character Model
 
+The original game shows characters with these attributes:
+- Name
+- Lifeforce: The number of remaining hit points, or the amount of damage the character can take before it perishes (decreases as damage is taken)
+- Strength
+- Dexterity
+- Speed: The number of spaces the character can move per turn (not used in this application)
+- Sword
+- Dagger
+- Armor
+
 The combat simulator uses the following character attributes:
 
 ### Core Attributes
