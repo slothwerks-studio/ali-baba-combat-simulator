@@ -39,6 +39,8 @@ All combat mechanics, formulas, and data structures are documented in `combat.md
 ### Core Types
 ```typescript
 type CharacterType = "dwarf" | "halfling" | "human" | "elf";
+type CreatureType = "thief" | "other";
+type CombatantType = CharacterType | CreatureType;
 type WeaponType = "sword" | "dagger";
 type CombatRange = "adjacent" | "close_quarters";
 
@@ -56,12 +58,13 @@ interface Weapon {
 
 interface Combatant {
   name: string;
-  characterType: CharacterType;
+  type: CombatantType;  // Can be CharacterType or CreatureType
   strength: number;           // 1-20
   baseDexterity: number;      // 1-24
   maxLifeForce: number;       // max HP (up to ~26)
   currentLifeForce: number;   // current HP
-  weapon: Weapon;
+  sword: Weapon;              // Used in adjacent combat
+  dagger: Weapon;             // Used in close quarters combat
   armor: Armor;
   isUnconscious: boolean;
   
@@ -90,38 +93,42 @@ Example:
 const CHARACTERS = [
   {
     name: "Thorin the Dwarf",
-    characterType: "dwarf",
+    type: "dwarf",
     strength: 18,
     baseDexterity: 12,
     maxLifeForce: 22,
-    weapon: { name: "Steel Sword", weaponType: "sword", power: 13 },
+    sword: { name: "Steel Sword", weaponType: "sword", power: 13 },
+    dagger: { name: "Iron Dagger", weaponType: "dagger", power: 10 },
     armor: { name: "Chainmail", armorClass: 3, dexterityPenalty: 2 }
   },
   {
     name: "Pippin the Halfling",
-    characterType: "halfling",
+    type: "halfling",
     strength: 10,
     baseDexterity: 20,
     maxLifeForce: 24,
-    weapon: { name: "Short Sword", weaponType: "sword", power: 10 },
+    sword: { name: "Short Sword", weaponType: "sword", power: 10 },
+    dagger: { name: "Stiletto", weaponType: "dagger", power: 9 },
     armor: { name: "Leather Armor", armorClass: 1, dexterityPenalty: 1 }
   },
   {
     name: "Legolas the Elf",
-    characterType: "elf",
+    type: "elf",
     strength: 12,
     baseDexterity: 22,
     maxLifeForce: 16,
-    weapon: { name: "Elven Blade", weaponType: "sword", power: 12 },
+    sword: { name: "Elven Blade", weaponType: "sword", power: 12 },
+    dagger: { name: "Elven Dagger", weaponType: "dagger", power: 11 },
     armor: { name: "Leather Armor", armorClass: 1, dexterityPenalty: 1 }
   },
   {
     name: "Aragorn the Human",
-    characterType: "human",
+    type: "human",
     strength: 16,
     baseDexterity: 14,
     maxLifeForce: 20,
-    weapon: { name: "Longsword", weaponType: "sword", power: 14 },
+    sword: { name: "Longsword", weaponType: "sword", power: 14 },
+    dagger: { name: "Ranger's Knife", weaponType: "dagger", power: 10 },
     armor: { name: "Chainmail", armorClass: 3, dexterityPenalty: 2 }
   }
 ];
@@ -133,29 +140,32 @@ Example:
 const CREATURES = [
   {
     name: "Goblin Scout",
-    characterType: "goblin", // can use "human" for simplicity or add new types
+    type: "thief",
     strength: 8,
     baseDexterity: 16,
     maxLifeForce: 12,
-    weapon: { name: "Rusty Dagger", weaponType: "dagger", power: 6 },
+    sword: { name: "Short Blade", weaponType: "sword", power: 8 },
+    dagger: { name: "Rusty Dagger", weaponType: "dagger", power: 6 },
     armor: { name: "No Armor", armorClass: 0, dexterityPenalty: 0 }
   },
   {
     name: "Orc Warrior",
-    characterType: "orc",
+    type: "other",
     strength: 16,
     baseDexterity: 10,
     maxLifeForce: 20,
-    weapon: { name: "Crude Sword", weaponType: "sword", power: 11 },
+    sword: { name: "Crude Sword", weaponType: "sword", power: 11 },
+    dagger: { name: "Jagged Knife", weaponType: "dagger", power: 8 },
     armor: { name: "Hide Armor", armorClass: 2, dexterityPenalty: 1 }
   },
   {
     name: "Troll Berserker",
-    characterType: "troll",
+    type: "other",
     strength: 20,
     baseDexterity: 8,
     maxLifeForce: 26,
-    weapon: { name: "Great Club", weaponType: "sword", power: 12 },
+    sword: { name: "Great Club", weaponType: "sword", power: 12 },
+    dagger: { name: "Troll Claw", weaponType: "dagger", power: 10 },
     armor: { name: "Thick Hide", armorClass: 4, dexterityPenalty: 0 }
   }
 ];
@@ -192,10 +202,11 @@ function getAttackBonus(combatant) {
 ### 3. Damage Calculation
 ```javascript
 function calculateDamage(attacker, defender, currentRange) {
-  // Get weapon based on range
+  // Get weapon power based on combat range
+  // Close quarters uses dagger, adjacent uses sword
   const weaponPower = currentRange === "close_quarters" 
-    ? attacker.weapon.power // assume dagger power, or define separate close-quarters weapon
-    : attacker.weapon.power;
+    ? attacker.dagger.power
+    : attacker.sword.power;
   
   // Random STR roll
   const effectiveStrength = attacker.isWeak ? Math.max(1, attacker.strength - 3) : attacker.strength;
