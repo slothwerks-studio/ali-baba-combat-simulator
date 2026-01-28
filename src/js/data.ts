@@ -4,86 +4,86 @@ import type { Character } from './types';
 
 export const CHARACTERS: Character[] = [
   {
-    name: "Thorin the Dwarf",
-    characterType: "dwarf",
-    strength: 18,
-    baseDexterity: 12,
-    maxLifeForce: 22,
-    weapon: { name: "Steel Sword", weaponType: "sword", power: 13 },
-    dagger: { name: "Iron Dagger", weaponType: "dagger", power: 11 },
-    armor: { name: "Chainmail", armorClass: 3, dexterityPenalty: 2 }
+    name: "Thora",
+    type: "dwarf",
+    strength: 17,
+    baseDexterity: 11,
+    maxLifeForce: 21,
+    adjacentWeapon: { name: "Steel Sword", type: "sword", power: 10 },
+    closeWeapon: { name: "Iron Dagger", type: "dagger", power: 5 },
+    armor: { name: "Leather Armor", strength: 1, dexterityPenalty: 1 }
   },
   {
-    name: "Pippin the Halfling",
-    characterType: "halfling",
+    name: "Stilbo",
+    type: "halfling",
     strength: 10,
-    baseDexterity: 20,
-    maxLifeForce: 24,
-    weapon: { name: "Short Sword", weaponType: "sword", power: 10 },
-    dagger: { name: "Fine Dagger", weaponType: "dagger", power: 9 },
-    armor: { name: "Leather Armor", armorClass: 1, dexterityPenalty: 1 }
+    baseDexterity: 16,
+    maxLifeForce: 26,
+    adjacentWeapon: { name: "Iron Sword", type: "sword", power: 6 },
+    closeWeapon: { name: "Iron Dagger", type: "dagger", power: 6 },
+    armor: { name: "Leather Armor", strength: 1, dexterityPenalty: 1 }
   },
   {
-    name: "Legolas the Elf",
-    characterType: "elf",
-    strength: 12,
-    baseDexterity: 22,
-    maxLifeForce: 16,
-    weapon: { name: "Elven Blade", weaponType: "sword", power: 12 },
-    dagger: { name: "Elven Dagger", weaponType: "dagger", power: 10 },
-    armor: { name: "Leather Armor", armorClass: 1, dexterityPenalty: 1 }
-  },
-  {
-    name: "Aragorn the Human",
-    characterType: "human",
+    name: "Huan",
+    type: "elf",
     strength: 16,
+    baseDexterity: 11,
+    maxLifeForce: 16,
+    adjacentWeapon: { name: "Iron Sword", type: "sword", power: 8 },
+    closeWeapon: { name: "Steel Dagger", type: "dagger", power: 9 },
+    armor: { name: "Leather Armor", strength: 1, dexterityPenalty: 1 }
+  },
+  {
+    name: "Bairam Medio",
+    type: "human",
+    strength: 14,
     baseDexterity: 14,
-    maxLifeForce: 20,
-    weapon: { name: "Longsword", weaponType: "sword", power: 14 },
-    dagger: { name: "Steel Dagger", weaponType: "dagger", power: 11 },
-    armor: { name: "Chainmail", armorClass: 3, dexterityPenalty: 2 }
+    maxLifeForce: 14,
+    adjacentWeapon: { name: "Iron Sword", type: "sword", power: 7 },
+    closeWeapon: { name: "Iron Dagger", type: "dagger", power: 6 },
+    armor: null
   }
 ];
 
 export const CREATURES: Character[] = [
   {
-    name: "Goblin Scout",
-    characterType: "goblin",
-    strength: 8,
-    baseDexterity: 16,
-    maxLifeForce: 12,
-    weapon: { name: "Rusty Sword", weaponType: "sword", power: 7 },
-    dagger: { name: "Rusty Dagger", weaponType: "dagger", power: 6 },
-    armor: { name: "No Armor", armorClass: 0, dexterityPenalty: 0 }
+    name: "Jami",
+    type: "thief",
+    strength: 13,
+    baseDexterity: 15,
+    maxLifeForce: 14,
+    adjacentWeapon: { name: "Iron Sword", type: "sword", power: 5 },
+    closeWeapon: { name: "Steel Dagger", type: "dagger", power: 7 },
+    armor: { name: "Leather Armor", strength: 1, dexterityPenalty: 1 }
   },
   {
-    name: "Orc Warrior",
-    characterType: "orc",
-    strength: 16,
-    baseDexterity: 10,
-    maxLifeForce: 20,
-    weapon: { name: "Crude Sword", weaponType: "sword", power: 11 },
-    dagger: { name: "Crude Dagger", weaponType: "dagger", power: 9 },
-    armor: { name: "Hide Armor", armorClass: 2, dexterityPenalty: 1 }
-  },
-  {
-    name: "Troll Berserker",
-    characterType: "troll",
-    strength: 20,
-    baseDexterity: 8,
-    maxLifeForce: 26,
-    weapon: { name: "Great Club", weaponType: "sword", power: 12 },
-    dagger: { name: "Bone Dagger", weaponType: "dagger", power: 10 },
-    armor: { name: "Thick Hide", armorClass: 4, dexterityPenalty: 0 }
-  },
-  {
-    name: "Shadow Assassin",
-    characterType: "assassin",
+    name: "Small Zombie",
+    type: "zombie",
     strength: 14,
-    baseDexterity: 20,
-    maxLifeForce: 18,
-    weapon: { name: "Curved Blade", weaponType: "sword", power: 11 },
-    dagger: { name: "Poison Dagger", weaponType: "dagger", power: 12 },
-    armor: { name: "Leather Armor", armorClass: 1, dexterityPenalty: 0 }
+    baseDexterity: 8,
+    maxLifeForce: 14,
+    adjacentWeapon: { name: "Nails", type: "nails", power: 4 },
+    closeWeapon: { name: "Teeth", type: "teeth", power: 6 },
+    armor: null
+  },
+  {
+    name: "Tiger",
+    type: "tiger",
+    strength: 12,
+    baseDexterity: 12,
+    maxLifeForce: 13,
+    adjacentWeapon: { name: "Claws", type: "claws", power: 8 },
+    closeWeapon: { name: "Teeth", type: "teeth", power: 8 },
+    armor: { name: "Thick Hide", strength: 1, dexterityPenalty: 0 }
+  },
+  {
+    name: "Very Young Dragon",
+    type: "dragon",
+    strength: 14,
+    baseDexterity: 13,
+    maxLifeForce: 15,
+    adjacentWeapon: { name: "Claws", type: "claws", power: 8 },
+    closeWeapon: { name: "Teeth", type: "teeth", power: 8 },
+    armor: { name: "Thick Hide", strength: 1, dexterityPenalty: 0 }
   }
 ];
