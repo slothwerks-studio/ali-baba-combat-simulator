@@ -24,7 +24,7 @@ export interface CombatState {
 }
 
 // Mutable combat state
-export let combatState: CombatState = {
+export const combatState: CombatState = {
   player: null,
   enemy: null,
   range: 'adjacent',

@@ -77,6 +77,8 @@ Based on classic AD&D-inspired rules:
 - HTML5 & CSS3
 - ES Modules
 - GitHub Pages deployment
+- Prettier for code formatting
+- ESLint with TypeScript support for code quality
 
 ## Documentation
 
@@ -132,6 +134,19 @@ npm run build
 ```bash
 npm run dev
 ```
+
+### Available Scripts
+
+- **`npm run build`** - Full production build (clean, lint, compile, copy)
+- **`npm run dev`** - Watch mode for TypeScript compilation
+- **`npm run clean`** - Remove dist/ folder
+- **`npm run compile`** - Compile TypeScript to JavaScript
+- **`npm run copy`** - Copy static assets to dist/
+- **`npm run format`** - Format all files with Prettier
+- **`npm run lint`** - Check code quality with ESLint
+- **`npm run lint:fix`** - Auto-fix ESLint issues
+
+Note: The build process automatically runs linting before compilation to catch issues early.
 
 ### Running the Web Interface
 

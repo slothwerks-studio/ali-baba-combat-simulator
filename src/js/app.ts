@@ -377,7 +377,7 @@ async function playerAction(action: string): Promise<void> {
       performedAction = true;
       break;
 
-    case 'tackle':
+    case 'tackle': {
       tackle(combatState.player, defender);
       combatState.combatLog.push('---');
       updateCombatLog();
@@ -392,8 +392,9 @@ async function playerAction(action: string): Promise<void> {
       }
       performedAction = true;
       break;
+    }
 
-    case 'disengage':
+    case 'disengage': {
       disengage(combatState.player, defender);
       combatState.combatLog.push('---');
       updateCombatLog();
@@ -408,6 +409,7 @@ async function playerAction(action: string): Promise<void> {
       }
       performedAction = true;
       break;
+    }
 
     case 'run':
       runAway(combatState.player);
