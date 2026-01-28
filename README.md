@@ -4,9 +4,7 @@ Turn-based 1v1 combat simulator inspired by the classic Ali Baba game and Advanc
 
 ## 🎮 Play Now
 
-**[Launch Combat Simulator](https://[YOUR-USERNAME].github.io/ali-baba-combat-simulator/)**
-
-_(Update the link above with your GitHub username after deploying)_
+**[Launch Combat Simulator](https://slothwerks-studio.github.io/ali-baba-combat-simulator/)**
 
 ## Overview
 
