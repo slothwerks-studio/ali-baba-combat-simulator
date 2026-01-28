@@ -88,7 +88,7 @@ MVP.md              # Phase 1 implementation spec
 ## Local Development
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (LTS preferred)
 - npm
 
 ### Setup and Build
@@ -114,16 +114,11 @@ Simply open `docs/index.html` in a web browser to run the deployed version.
 
 The source TypeScript files in `src/js/` are compiled to `dist/` (configured but currently allowing JS files).
 
-## Deploying to GitHub Pages
+## Deployment
 
-1. Push the `web-interface` branch to GitHub
-2. Go to repository Settings → Pages
-3. Set Source to "Deploy from a branch"
-4. Select branch: `web-interface`
-5. Select folder: `/docs`
-6. Save and wait for deployment
+The project is configured to deploy to GitHub Pages. Deployment will be automated via GitHub Actions to build and deploy when pushing to the `main` branch.
 
-Your site will be available at: `https://[YOUR-USERNAME].github.io/ali-baba-combat-simulator/`
+> **Note**: Deployment automation is planned. Manual deployment instructions will be added once the CI/CD pipeline is configured.
 
 ## Future Enhancements
 
