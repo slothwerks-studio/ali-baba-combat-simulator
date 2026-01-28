@@ -1,6 +1,57 @@
 // Character and Creature Data
 
-import type { Character } from './types';
+import type { Character, CharacterType, CharacterTypeDefinition } from './types';
+
+// Character type definitions with bonuses
+export const CHARACTER_TYPE_DEFINITIONS: Record<CharacterType, CharacterTypeDefinition> = {
+  human: {
+    name: 'Human',
+    adjustments: {
+      adjacentDamage: 3
+    }
+  },
+  elf: {
+    name: 'Elf',
+    adjustments: {
+      closeQuartersAttack: 3
+    }
+  },
+  halfling: {
+    name: 'Halfling',
+    adjustments: {
+      closeQuartersAttack: 3
+    }
+  },
+  dwarf: {
+    name: 'Dwarf',
+    adjustments: {
+      closeQuartersAttack: 2,
+      adjacentDamage: 3
+    }
+  },
+  thief: {
+    name: 'Thief',
+    adjustments: {
+      closeQuartersAttack: 3
+    }
+  },
+  zombie: {
+    name: 'Zombie',
+    adjustments: {}
+  },
+  tiger: {
+    name: 'Tiger',
+    adjustments: {}
+  },
+  dragon: {
+    name: 'Dragon',
+    adjustments: {}
+  },
+  other: {
+    name: 'Other',
+    adjustments: {}
+  }
+};
 
 export const CHARACTERS: Character[] = [
   {
@@ -84,6 +135,6 @@ export const CREATURES: Character[] = [
     maxLifeForce: 15,
     adjacentWeapon: { name: "Claws", type: "claws", power: 8 },
     closeWeapon: { name: "Teeth", type: "teeth", power: 8 },
-    armor: { name: "Thick Hide", strength: 1, dexterityPenalty: 0 }
+    armor: { name: "Thick Hide", strength: 2, dexterityPenalty: 0 }
   }
 ];

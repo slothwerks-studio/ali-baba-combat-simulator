@@ -34,3 +34,14 @@ export interface Combatant extends Character {
   effectiveDexterity: number;
   isWeak: boolean;
 }
+export interface CharacterTypeAdjustments {
+  adjacentAttack?: number;
+  adjacentDamage?: number;
+  closeQuartersAttack?: number;
+  closeQuartersDamage?: number;
+}
+
+export interface CharacterTypeDefinition {
+  name: string;
+  adjustments: CharacterTypeAdjustments;
+}

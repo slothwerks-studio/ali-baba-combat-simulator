@@ -2,6 +2,7 @@
 
 import type { Character, Combatant, Weapon } from './types';
 import { d20, roll } from './dice';
+import { CHARACTER_TYPE_DEFINITIONS } from './data';
 
 const MAX_INITIATIVE_RETRIES = 10;
 
@@ -126,39 +127,31 @@ export function nextTurn(): void {
   combatState.turnCount++;
 }
 
-// Get character type bonuses
+// Get character type adjustments
 function getAttackBonus(combatant: Combatant): number {
-  let bonus = 0;
-  // Dwarf: +2 to hit in close quarters
-  if (combatant.type === 'dwarf' && combatState.range === 'close_quarters') {
-    bonus += 2;
+  const typeDef = CHARACTER_TYPE_DEFINITIONS[combatant.type];
+  
+  if (combatState.range === 'close_quarters') {
+    return typeDef.adjustments.closeQuartersAttack ?? 0;
+  } else {
+    return typeDef.adjustments.adjacentAttack ?? 0;
   }
-  return bonus;
 }
 
 function getDamageBonus(combatant: Combatant): number {
-  let bonus = 0;
-  // Dwarf: +3 damage with swords (adjacent)
-  if (combatant.type === 'dwarf' && combatState.range === 'adjacent') {
-    bonus += 3;
+  const typeDef = CHARACTER_TYPE_DEFINITIONS[combatant.type];
+  
+  if (combatState.range === 'close_quarters') {
+    return typeDef.adjustments.closeQuartersDamage ?? 0;
+  } else {
+    return typeDef.adjustments.adjacentDamage ?? 0;
   }
-  // Human: +3 damage with swords (adjacent)
-  if (combatant.type === 'human' && combatState.range === 'adjacent') {
-    bonus += 3;
-  }
-  // Halfling: +3 damage in close quarters
-  if (combatant.type === 'halfling' && combatState.range === 'close_quarters') {
-    bonus += 3;
-  }
-  // Elf: +3 damage in close quarters
-  if (combatant.type === 'elf' && combatState.range === 'close_quarters') {
-    bonus += 3;
-  }
-  return bonus;
 }
 
 // Attack action
 export function attack(attacker: Combatant, defender: Combatant, isDefending: boolean): boolean {
+  if (!combatState.player || !combatState.enemy) return false;
+  
   const attackerName = attacker === combatState.player ? combatState.player.name : combatState.enemy.name;
   const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
   const weapon = getCurrentWeapon(attacker);
@@ -224,6 +217,8 @@ function calculateDamage(attacker: Combatant, defender: Combatant): number {
 
 // Apply damage
 function applyDamage(target: Combatant, damage: number): void {
+  if (!combatState.player || !combatState.enemy) return;
+  
   const targetName = target === combatState.player ? combatState.player.name : combatState.enemy.name;
   const oldHP = target.currentLifeForce;
   target.currentLifeForce = Math.max(0, target.currentLifeForce - damage);
@@ -246,6 +241,8 @@ function applyDamage(target: Combatant, damage: number): void {
 
 // Update combatant status
 function updateCombatantStatus(combatant: Combatant): void {
+  if (!combatState.player || !combatState.enemy) return;
+  
   const targetName = combatant === combatState.player ? combatState.player.name : combatState.enemy.name;
   
   // Check unconscious
@@ -268,6 +265,8 @@ function updateCombatantStatus(combatant: Combatant): void {
 
 // Defend action
 export function defend(defender: Combatant): void {
+  if (!combatState.player || !combatState.enemy) return;
+  
   const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
   log(`${defenderName}'s Turn`);
   log(`${defenderName} takes a defensive stance!`);
@@ -276,6 +275,8 @@ export function defend(defender: Combatant): void {
 
 // Tackle/Wrestle action
 export function tackle(attacker: Combatant, defender: Combatant): boolean {
+  if (!combatState.player || !combatState.enemy) return false;
+  
   const attackerName = attacker === combatState.player ? combatState.player.name : combatState.enemy.name;
   const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
 
@@ -303,6 +304,8 @@ export function tackle(attacker: Combatant, defender: Combatant): boolean {
 
 // Disengage action
 export function disengage(attacker: Combatant, defender: Combatant): boolean {
+  if (!combatState.player || !combatState.enemy) return false;
+  
   const attackerName = attacker === combatState.player ? combatState.player.name : combatState.enemy.name;
   const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
 
@@ -330,6 +333,8 @@ export function disengage(attacker: Combatant, defender: Combatant): boolean {
 
 // Run away action
 export function runAway(runner: Combatant): void {
+  if (!combatState.player || !combatState.enemy) return;
+  
   const runnerName = runner === combatState.player ? combatState.player.name : combatState.enemy.name;
   log(`${runnerName} flees from combat!`);
   endCombat(runner === combatState.player ? 'fled' : 'player');
@@ -337,6 +342,8 @@ export function runAway(runner: Combatant): void {
 
 // Wake up attempt for unconscious
 export function attemptWakeUp(combatant: Combatant): boolean {
+  if (!combatState.player || !combatState.enemy) return false;
+  
   const combatantName = combatant === combatState.player ? combatState.player.name : combatState.enemy.name;
   log(`${combatantName}'s Turn`);
   log(`${combatantName} is unconscious...`);
@@ -356,6 +363,8 @@ export function attemptWakeUp(combatant: Combatant): boolean {
 
 // End combat
 function endCombat(victor: 'player' | 'enemy' | 'fled'): void {
+  if (!combatState.player || !combatState.enemy) return;
+  
   combatState.isGameOver = true;
   combatState.victor = victor;
   log('---');
@@ -375,11 +384,13 @@ function log(message: string): void {
 }
 
 // Get current combatant
-export function getCurrentCombatant(): Combatant {
+export function getCurrentCombatant(): Combatant | null {
+  if (!combatState.player || !combatState.enemy) return null;
   return combatState.currentTurn === 'player' ? combatState.player : combatState.enemy;
 }
 
 // Get opponent of a combatant
-export function getOpponent(combatant: Combatant): Combatant {
+export function getOpponent(combatant: Combatant): Combatant | null {
+  if (!combatState.player || !combatState.enemy) return null;
   return combatant === combatState.player ? combatState.enemy : combatState.player;
 }
