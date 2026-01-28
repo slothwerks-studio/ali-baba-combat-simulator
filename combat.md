@@ -334,7 +334,7 @@ Otherwise: FAIL
 - Combatant is flagged as weak when `currentLifeForce < maxLifeForce * 0.5`
 - **Combat Penalty**: -3 to effective STR for damage calculation
   - When weak: `effectiveStrength = max(1, strength - 3)`
-  - This reduces the STR component in damage formula: `random(1, effectiveStrength) + weaponPower - AC`
+  - This reduces the STR component in damage formula: `random(1, effectiveStrength) + weapon_power - target_AC`
 - Weak combatants deal less damage but can still attack normally
 - DEX is not affected (to-hit rolls remain unchanged)
 
