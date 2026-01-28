@@ -1,24 +1,81 @@
 // Combat Engine
 
+/**
+ * @typedef {Object} Weapon
+ * @property {string} name
+ * @property {string} weaponType
+ * @property {number} power
+ */
+
+/**
+ * @typedef {Object} Armor
+ * @property {string} name
+ * @property {number} armorClass
+ * @property {number} dexterityPenalty
+ */
+
+/**
+ * @typedef {Object} Character
+ * @property {string} name
+ * @property {string} characterType
+ * @property {number} strength
+ * @property {number} baseDexterity
+ * @property {number} maxLifeForce
+ * @property {Weapon} weapon
+ * @property {Weapon} dagger
+ * @property {Armor} armor
+ */
+
+/**
+ * @typedef {Object} Combatant
+ * @property {string} name
+ * @property {string} characterType
+ * @property {number} strength
+ * @property {number} baseDexterity
+ * @property {number} maxLifeForce
+ * @property {Weapon} weapon
+ * @property {Weapon} dagger
+ * @property {Armor} armor
+ * @property {number} currentLifeForce
+ * @property {boolean} isUnconscious
+ * @property {string | null} lastAction
+ * @property {number} effectiveDexterity
+ * @property {boolean} isWeak
+ */
+
 class CombatEngine {
+  /**
+   * @param {Character} player
+   * @param {Character} enemy
+   */
   constructor(player, enemy) {
     this.player = this.initializeCombatant(player);
     this.enemy = this.initializeCombatant(enemy);
     this.range = "adjacent"; // Start at adjacent range
+    /** @type {string | null} */
     this.currentTurn = null;
     this.playerGoesFirst = false;
+    /** @type {string[]} */
     this.combatLog = [];
     this.isGameOver = false;
+    /** @type {string | null} */
     this.victor = null;
     this.turnCount = 0;
   }
 
+  /**
+   * @param {Character} data
+   * @returns {Combatant}
+   */
   initializeCombatant(data) {
+    /** @type {Combatant} */
     const combatant = {
       ...data,
       currentLifeForce: data.maxLifeForce,
       isUnconscious: false,
-      lastAction: null
+      lastAction: null,
+      effectiveDexterity: 0,
+      isWeak: false
     };
     combatant.effectiveDexterity = combatant.baseDexterity - combatant.armor.dexterityPenalty;
     combatant.isWeak = false;
@@ -26,6 +83,10 @@ class CombatEngine {
   }
 
   // Get current weapon based on combat range
+  /**
+   * @param {Combatant} combatant
+   * @returns {Weapon}
+   */
   getCurrentWeapon(combatant) {
     if (this.range === "close_quarters") {
       return combatant.dagger;
@@ -67,6 +128,10 @@ class CombatEngine {
   }
 
   // Get character type bonuses
+  /**
+   * @param {Combatant} combatant
+   * @returns {number}
+   */
   getAttackBonus(combatant) {
     let bonus = 0;
     // Dwarf: +2 to hit in close quarters
@@ -76,6 +141,10 @@ class CombatEngine {
     return bonus;
   }
 
+  /**
+   * @param {Combatant} combatant
+   * @returns {number}
+   */
   getDamageBonus(combatant) {
     let bonus = 0;
     // Dwarf: +3 damage with swords (adjacent)
@@ -98,6 +167,12 @@ class CombatEngine {
   }
 
   // Attack action
+  /**
+   * @param {Combatant} attacker
+   * @param {Combatant} defender
+   * @param {boolean} isDefending
+   * @returns {boolean}
+   */
   attack(attacker, defender, isDefending) {
     const attackerName = attacker === this.player ? this.player.name : this.enemy.name;
     const defenderName = defender === this.player ? this.player.name : this.enemy.name;
@@ -138,6 +213,11 @@ class CombatEngine {
   }
 
   // Calculate damage
+  /**
+   * @param {Combatant} attacker
+   * @param {Combatant} defender
+   * @returns {number}
+   */
   calculateDamage(attacker, defender) {
     const weapon = this.getCurrentWeapon(attacker);
     
@@ -162,6 +242,10 @@ class CombatEngine {
   }
 
   // Apply damage
+  /**
+   * @param {Combatant} target
+   * @param {number} damage
+   */
   applyDamage(target, damage) {
     const targetName = target === this.player ? this.player.name : this.enemy.name;
     const oldHP = target.currentLifeForce;
@@ -184,6 +268,9 @@ class CombatEngine {
   }
 
   // Update combatant status
+  /**
+   * @param {Combatant} combatant
+   */
   updateCombatantStatus(combatant) {
     const targetName = combatant === this.player ? this.player.name : this.enemy.name;
     
@@ -206,6 +293,9 @@ class CombatEngine {
   }
 
   // Defend action
+  /**
+   * @param {Combatant} defender
+   */
   defend(defender) {
     const defenderName = defender === this.player ? this.player.name : this.enemy.name;
     this.log(`${defenderName}'s Turn`);
@@ -214,6 +304,11 @@ class CombatEngine {
   }
 
   // Tackle/Wrestle action
+  /**
+   * @param {Combatant} attacker
+   * @param {Combatant} defender
+   * @returns {boolean}
+   */
   tackle(attacker, defender) {
     const attackerName = attacker === this.player ? this.player.name : this.enemy.name;
     const defenderName = defender === this.player ? this.player.name : this.enemy.name;
@@ -241,6 +336,11 @@ class CombatEngine {
   }
 
   // Disengage action
+  /**
+   * @param {Combatant} attacker
+   * @param {Combatant} defender
+   * @returns {boolean}
+   */
   disengage(attacker, defender) {
     const attackerName = attacker === this.player ? this.player.name : this.enemy.name;
     const defenderName = defender === this.player ? this.player.name : this.enemy.name;
@@ -268,6 +368,9 @@ class CombatEngine {
   }
 
   // Run away action
+  /**
+   * @param {Combatant} runner
+   */
   runAway(runner) {
     const runnerName = runner === this.player ? this.player.name : this.enemy.name;
     this.log(`${runnerName} flees from combat!`);
@@ -275,6 +378,10 @@ class CombatEngine {
   }
 
   // Wake up attempt for unconscious
+  /**
+   * @param {Combatant} combatant
+   * @returns {boolean}
+   */
   attemptWakeUp(combatant) {
     const combatantName = combatant === this.player ? this.player.name : this.enemy.name;
     this.log(`${combatantName}'s Turn`);
@@ -294,6 +401,9 @@ class CombatEngine {
   }
 
   // End combat
+  /**
+   * @param {string} victor
+   */
   endCombat(victor) {
     this.isGameOver = true;
     this.victor = victor;
@@ -309,6 +419,9 @@ class CombatEngine {
   }
 
   // Logging
+  /**
+   * @param {string} message
+   */
   log(message) {
     this.combatLog.push(message);
   }
@@ -318,6 +431,10 @@ class CombatEngine {
     return this.currentTurn === "player" ? this.player : this.enemy;
   }
 
+  /**
+   * @param {Combatant} combatant
+   * @returns {Combatant}
+   */
   getOpponent(combatant) {
     return combatant === this.player ? this.enemy : this.player;
   }

@@ -87,7 +87,32 @@ MVP.md              # Phase 1 implementation spec
 
 ## Local Development
 
-Simply open `docs/index.html` in a web browser. No build process required!
+### Prerequisites
+- Node.js (v16 or higher)
+- npm
+
+### Setup and Build
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Build the TypeScript source:
+```bash
+npm run build
+```
+
+3. Development mode (auto-rebuild on changes):
+```bash
+npm run dev
+```
+
+### Running the Web Interface
+
+Simply open `docs/index.html` in a web browser to run the deployed version.
+
+The source TypeScript files in `src/js/` are compiled to `dist/` (configured but currently allowing JS files).
 
 ## Deploying to GitHub Pages
 
