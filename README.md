@@ -10,7 +10,7 @@ Turn-based 1v1 combat simulator inspired by the classic Ali Baba game and Advanc
 
 ## Overview
 
-This project simulates the combat mechanics from the classic Ali Baba game, using AD&D-inspired turn-based combat rules with opposed dice rolls, character-specific bonuses, and dynamic combat ranges.
+This project simulates the combat mechanics from the [classic Ali Baba game](https://archive.org/details/Ali_Baba_and_the_Forty_Thieves_Dr._Death_crack), using AD&D-inspired turn-based combat rules with opposed dice rolls, character-specific bonuses, and dynamic combat ranges.
 
 ## Character Model
 
@@ -59,9 +59,9 @@ Based on classic AD&D-inspired rules:
 
 ## Tech Stack
 
-- Pure JavaScript (ES6+)
+- TypeScript (ES2020)
 - HTML5 & CSS3
-- No frameworks or dependencies
+- Node.js build tooling
 - Deployed via GitHub Pages
 
 ## Documentation
