@@ -34,7 +34,7 @@ export let combatState: CombatState = {
   isGameOver: false,
   victor: null,
   turnCount: 0,
-  initiativeRetries: 0
+  initiativeRetries: 0,
 };
 
 // Initialize a combatant from character data
@@ -46,12 +46,12 @@ function initializeCombatant(data: Character): Combatant {
     lastAction: null,
     effectiveDexterity: 0,
     isWeak: false,
-    isTackled: false
+    isTackled: false,
   };
-  
+
   const armorPenalty = combatant.armor?.dexterityPenalty ?? 0;
   combatant.effectiveDexterity = combatant.baseDexterity - armorPenalty;
-  
+
   return combatant;
 }
 
@@ -80,14 +80,18 @@ export function getCurrentWeapon(combatant: Combatant): Weapon {
 // Initiative roll
 export function rollInitiative(): void {
   if (!combatState.player || !combatState.enemy) return;
-  
+
   const playerRoll = d20();
   const enemyRoll = d20();
   const playerTotal = playerRoll + combatState.player.effectiveDexterity;
   const enemyTotal = enemyRoll + combatState.enemy.effectiveDexterity;
 
-  log(`${combatState.player.name} rolled initiative: ${playerTotal} (1d20: ${playerRoll} + DEX: ${combatState.player.effectiveDexterity})`);
-  log(`${combatState.enemy.name} rolled initiative: ${enemyTotal} (1d20: ${enemyRoll} + DEX: ${combatState.enemy.effectiveDexterity})`);
+  log(
+    `${combatState.player.name} rolled initiative: ${playerTotal} (1d20: ${playerRoll} + DEX: ${combatState.player.effectiveDexterity})`,
+  );
+  log(
+    `${combatState.enemy.name} rolled initiative: ${enemyTotal} (1d20: ${enemyRoll} + DEX: ${combatState.enemy.effectiveDexterity})`,
+  );
 
   if (playerTotal > enemyTotal) {
     combatState.playerGoesFirst = true;
@@ -100,9 +104,11 @@ export function rollInitiative(): void {
   } else {
     // Tie - re-roll
     combatState.initiativeRetries++;
-    
+
     if (combatState.initiativeRetries >= MAX_INITIATIVE_RETRIES) {
-      log(`Tie! Maximum retries reached (${MAX_INITIATIVE_RETRIES}). Randomly determining initiative...`);
+      log(
+        `Tie! Maximum retries reached (${MAX_INITIATIVE_RETRIES}). Randomly determining initiative...`,
+      );
       // Break tie randomly
       if (Math.random() < 0.5) {
         combatState.playerGoesFirst = true;
@@ -127,15 +133,16 @@ export function nextTurn(): void {
   // Clear any tackled status
   if (combatState.player) combatState.player.isTackled = false;
   if (combatState.enemy) combatState.enemy.isTackled = false;
-  
-  combatState.currentTurn = combatState.currentTurn === 'player' ? 'enemy' : 'player';
+
+  combatState.currentTurn =
+    combatState.currentTurn === 'player' ? 'enemy' : 'player';
   combatState.turnCount++;
 }
 
 // Get character type adjustments
 function getAttackBonus(combatant: Combatant): number {
   const typeDef = CHARACTER_TYPE_DEFINITIONS[combatant.type];
-  
+
   if (combatState.range === 'close_quarters') {
     return typeDef.adjustments.closeQuartersAttack ?? 0;
   } else {
@@ -145,7 +152,7 @@ function getAttackBonus(combatant: Combatant): number {
 
 function getDamageBonus(combatant: Combatant): number {
   const typeDef = CHARACTER_TYPE_DEFINITIONS[combatant.type];
-  
+
   if (combatState.range === 'close_quarters') {
     return typeDef.adjustments.closeQuartersDamage ?? 0;
   } else {
@@ -154,11 +161,21 @@ function getDamageBonus(combatant: Combatant): number {
 }
 
 // Attack action
-export function attack(attacker: Combatant, defender: Combatant, isDefending: boolean): boolean {
+export function attack(
+  attacker: Combatant,
+  defender: Combatant,
+  isDefending: boolean,
+): boolean {
   if (!combatState.player || !combatState.enemy) return false;
-  
-  const attackerName = attacker === combatState.player ? combatState.player.name : combatState.enemy.name;
-  const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
+
+  const attackerName =
+    attacker === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
+  const defenderName =
+    defender === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
   const weapon = getCurrentWeapon(attacker);
 
   log(`${attackerName}'s Turn`);
@@ -175,15 +192,24 @@ export function attack(attacker: Combatant, defender: Combatant, isDefending: bo
   // To-hit roll (opposed)
   const attackBonus = getAttackBonus(attacker);
   const attackerRoll = d20();
-  const attackerTotal = attackerRoll + attacker.effectiveDexterity + attackBonus;
+  const attackerTotal =
+    attackerRoll + attacker.effectiveDexterity + attackBonus;
 
   const defenderBonus = isDefending ? 5 : 0;
   const defenderPenalty = defender.isTackled ? -5 : 0;
   const defenderRoll = d20();
-  const defenderTotal = defenderRoll + defender.effectiveDexterity + defenderBonus + defenderPenalty;
+  const defenderTotal =
+    defenderRoll +
+    defender.effectiveDexterity +
+    defenderBonus +
+    defenderPenalty;
 
-  log(`Attack roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity}${attackBonus > 0 ? ` + Bonus: ${attackBonus}` : ''})`);
-  log(`Defense roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity}${defenderBonus > 0 ? ` + Defend: ${defenderBonus}` : ''}${defenderPenalty < 0 ? ` - Tackled: ${Math.abs(defenderPenalty)}` : ''})`);
+  log(
+    `Attack roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity}${attackBonus > 0 ? ` + Bonus: ${attackBonus}` : ''})`,
+  );
+  log(
+    `Defense roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity}${defenderBonus > 0 ? ` + Defend: ${defenderBonus}` : ''}${defenderPenalty < 0 ? ` - Tackled: ${Math.abs(defenderPenalty)}` : ''})`,
+  );
 
   if (attackerTotal > defenderTotal) {
     log(`Hit! ${attackerName} lands a blow!`);
@@ -199,13 +225,15 @@ export function attack(attacker: Combatant, defender: Combatant, isDefending: bo
 // Calculate damage
 function calculateDamage(attacker: Combatant, defender: Combatant): number {
   const weapon = getCurrentWeapon(attacker);
-  
+
   // Apply weakness penalty
-  const effectiveStrength = attacker.isWeak ? Math.max(1, attacker.strength - 3) : attacker.strength;
+  const effectiveStrength = attacker.isWeak
+    ? Math.max(1, attacker.strength - 3)
+    : attacker.strength;
   const strRoll = roll(1, effectiveStrength);
-  
+
   const damageBonus = getDamageBonus(attacker);
-  
+
   const rawDamage = strRoll + weapon.power + damageBonus;
   const armorStrength = defender.armor?.strength ?? 0;
   const finalDamage = Math.max(0, rawDamage - armorStrength);
@@ -224,15 +252,20 @@ function calculateDamage(attacker: Combatant, defender: Combatant): number {
 // Apply damage
 function applyDamage(target: Combatant, damage: number): void {
   if (!combatState.player || !combatState.enemy) return;
-  
-  const targetName = target === combatState.player ? combatState.player.name : combatState.enemy.name;
+
+  const targetName =
+    target === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
   const oldHP = target.currentLifeForce;
   target.currentLifeForce = Math.max(0, target.currentLifeForce - damage);
-  
+
   if (damage === 0) {
     log(`${targetName}'s armor absorbs all the damage!`);
   } else {
-    log(`${targetName} takes ${damage} damage! (${oldHP} → ${target.currentLifeForce} HP)`);
+    log(
+      `${targetName} takes ${damage} damage! (${oldHP} → ${target.currentLifeForce} HP)`,
+    );
   }
 
   // Update status
@@ -248,14 +281,19 @@ function applyDamage(target: Combatant, damage: number): void {
 // Update combatant status
 function updateCombatantStatus(combatant: Combatant): void {
   if (!combatState.player || !combatState.enemy) return;
-  
-  const targetName = combatant === combatState.player ? combatState.player.name : combatState.enemy.name;
-  
+
+  const targetName =
+    combatant === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
+
   // Check unconscious
   const unconsciousThreshold = Math.floor(combatant.maxLifeForce * 0.1);
   const wasUnconscious = combatant.isUnconscious;
-  combatant.isUnconscious = combatant.currentLifeForce <= unconsciousThreshold && combatant.currentLifeForce > 0;
-  
+  combatant.isUnconscious =
+    combatant.currentLifeForce <= unconsciousThreshold &&
+    combatant.currentLifeForce > 0;
+
   if (combatant.isUnconscious && !wasUnconscious) {
     log(`${targetName} falls unconscious!`);
   }
@@ -263,7 +301,7 @@ function updateCombatantStatus(combatant: Combatant): void {
   // Check weak
   const wasWeak = combatant.isWeak;
   combatant.isWeak = combatant.currentLifeForce < combatant.maxLifeForce * 0.5;
-  
+
   if (combatant.isWeak && !wasWeak) {
     log(`${targetName} is feeling weak...`);
   }
@@ -272,8 +310,11 @@ function updateCombatantStatus(combatant: Combatant): void {
 // Defend action
 export function defend(defender: Combatant): void {
   if (!combatState.player || !combatState.enemy) return;
-  
-  const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
+
+  const defenderName =
+    defender === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
   log(`${defenderName}'s Turn`);
   log(`${defenderName} takes a defensive stance!`);
   defender.lastAction = 'defend';
@@ -282,25 +323,37 @@ export function defend(defender: Combatant): void {
 // Tackle/Wrestle action
 export function tackle(attacker: Combatant, defender: Combatant): boolean {
   if (!combatState.player || !combatState.enemy) return false;
-  
-  const attackerName = attacker === combatState.player ? combatState.player.name : combatState.enemy.name;
-  const defenderName = defender === combatState.player ? combatState.player.name : combatState.enemy.name;
+
+  const attackerName =
+    attacker === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
+  const defenderName =
+    defender === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
 
   log(`${attackerName}'s Turn`);
   log(`${attackerName} attempts to tackle ${defenderName}!`);
 
   const attackerRoll = d20();
   const attackerTotal = attackerRoll + attacker.effectiveDexterity;
-  
+
   const defenderRoll = d20();
   const defenderTotal = defenderRoll + defender.effectiveDexterity;
 
-  log(`Tackle roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity})`);
-  log(`Resist roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity})`);
+  log(
+    `Tackle roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity})`,
+  );
+  log(
+    `Resist roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity})`,
+  );
 
   if (attackerTotal > defenderTotal) {
     defender.isTackled = true;
-    log(`Success! ${attackerName} tackles ${defenderName} into close quarters!`);
+    log(
+      `Success! ${attackerName} tackles ${defenderName} into close quarters!`,
+    );
     combatState.range = 'close_quarters';
     return true;
   } else {
@@ -312,20 +365,27 @@ export function tackle(attacker: Combatant, defender: Combatant): boolean {
 // Disengage action
 export function disengage(attacker: Combatant, defender: Combatant): boolean {
   if (!combatState.player || !combatState.enemy) return false;
-  
-  const attackerName = attacker === combatState.player ? combatState.player.name : combatState.enemy.name;
+
+  const attackerName =
+    attacker === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
 
   log(`${attackerName}'s Turn`);
   log(`${attackerName} attempts to disengage from close quarters!`);
 
   const attackerRoll = d20();
   const attackerTotal = attackerRoll + attacker.effectiveDexterity;
-  
+
   const defenderRoll = d20();
   const defenderTotal = defenderRoll + defender.effectiveDexterity;
 
-  log(`Disengage roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity})`);
-  log(`Resist roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity})`);
+  log(
+    `Disengage roll: ${attackerTotal} (1d20: ${attackerRoll} + DEX: ${attacker.effectiveDexterity})`,
+  );
+  log(
+    `Resist roll: ${defenderTotal} (1d20: ${defenderRoll} + DEX: ${defender.effectiveDexterity})`,
+  );
 
   if (attackerTotal > defenderTotal) {
     log(`Success! ${attackerName} breaks away to adjacent range!`);
@@ -340,8 +400,11 @@ export function disengage(attacker: Combatant, defender: Combatant): boolean {
 // Run away action
 export function runAway(runner: Combatant): void {
   if (!combatState.player || !combatState.enemy) return;
-  
-  const runnerName = runner === combatState.player ? combatState.player.name : combatState.enemy.name;
+
+  const runnerName =
+    runner === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
   log(`${runnerName} flees from combat!`);
   endCombat(runner === combatState.player ? 'fled' : 'player');
 }
@@ -349,14 +412,17 @@ export function runAway(runner: Combatant): void {
 // Wake up attempt for unconscious
 export function attemptWakeUp(combatant: Combatant): boolean {
   if (!combatState.player || !combatState.enemy) return false;
-  
-  const combatantName = combatant === combatState.player ? combatState.player.name : combatState.enemy.name;
+
+  const combatantName =
+    combatant === combatState.player
+      ? combatState.player.name
+      : combatState.enemy.name;
   log(`${combatantName}'s Turn`);
   log(`${combatantName} is unconscious...`);
-  
+
   const wakeRoll = d20();
   log(`Wake-up roll: ${wakeRoll} (need 10+)`);
-  
+
   if (wakeRoll >= 10) {
     combatant.isUnconscious = false;
     log(`${combatantName} regains consciousness!`);
@@ -370,11 +436,11 @@ export function attemptWakeUp(combatant: Combatant): boolean {
 // End combat
 function endCombat(victor: 'player' | 'enemy' | 'fled'): void {
   if (!combatState.player || !combatState.enemy) return;
-  
+
   combatState.isGameOver = true;
   combatState.victor = victor;
   log('---');
-  
+
   if (victor === 'player') {
     log(`VICTORY! ${combatState.player.name} wins!`);
   } else if (victor === 'enemy') {

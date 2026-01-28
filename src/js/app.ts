@@ -13,7 +13,7 @@ import {
   runAway,
   attemptWakeUp,
   nextTurn,
-  getCurrentWeapon
+  getCurrentWeapon,
 } from './engine';
 
 // App state
@@ -26,12 +26,13 @@ interface AppState {
 const appState: AppState = {
   selectedCharacter: null,
   selectedCreature: null,
-  isProcessing: false
+  isProcessing: false,
 };
 
 // Calculate difficulty rating for creatures
 function getDifficulty(creature: Character): string {
-  const score = creature.maxLifeForce + creature.strength + creature.baseDexterity;
+  const score =
+    creature.maxLifeForce + creature.strength + creature.baseDexterity;
   if (score < 40) return 'Easy';
   if (score < 50) return 'Medium';
   return 'Hard';
@@ -41,16 +42,18 @@ function getDifficulty(creature: Character): string {
 function renderCharacterSelection(): void {
   const grid = document.getElementById('character-grid');
   if (!grid) return;
-  
+
   grid.innerHTML = '';
 
   CHARACTERS.forEach((char, index) => {
     const card = document.createElement('div');
     card.className = 'selection-card';
     card.dataset.index = index.toString();
-    
-    const armorText = char.armor ? `${char.armor.name} (${char.armor.strength})` : 'None';
-    
+
+    const armorText = char.armor
+      ? `${char.armor.name} (${char.armor.strength})`
+      : 'None';
+
     card.innerHTML = `
       <h3>${char.name}</h3>
       <div class="card-type">${char.type}</div>
@@ -72,17 +75,19 @@ function renderCharacterSelection(): void {
 function renderCreatureSelection(): void {
   const grid = document.getElementById('creature-grid');
   if (!grid) return;
-  
+
   grid.innerHTML = '';
 
   CREATURES.forEach((creature, index) => {
     const card = document.createElement('div');
     card.className = 'selection-card';
     card.dataset.index = index.toString();
-    
+
     const difficulty = getDifficulty(creature);
-    const armorText = creature.armor ? `${creature.armor.name} (${creature.armor.strength})` : 'None';
-    
+    const armorText = creature.armor
+      ? `${creature.armor.name} (${creature.armor.strength})`
+      : 'None';
+
     card.innerHTML = `
       <h3>${creature.name}</h3>
       <div class="card-type">${creature.type} - ${difficulty}</div>
@@ -102,7 +107,7 @@ function renderCreatureSelection(): void {
 
 // Screen management
 function showScreen(screenId: string): void {
-  document.querySelectorAll('.screen').forEach(screen => {
+  document.querySelectorAll('.screen').forEach((screen) => {
     screen.classList.remove('active');
   });
   const targetScreen = document.getElementById(screenId);
@@ -126,14 +131,14 @@ function selectCreature(index: number): void {
 // Start combat
 function startCombat(): void {
   if (!appState.selectedCharacter || !appState.selectedCreature) return;
-  
+
   initCombat(appState.selectedCharacter, appState.selectedCreature);
   rollInitiative();
-  
+
   showScreen('combat-screen');
   updateUI();
   updateCombatLog();
-  
+
   // If enemy goes first, execute their turn after a delay
   if (combatState.currentTurn === 'enemy') {
     setTimeout(() => executeEnemyTurn(), 1000);
@@ -143,7 +148,7 @@ function startCombat(): void {
 // Update UI
 function updateUI(): void {
   if (!combatState.player || !combatState.enemy) return;
-  
+
   updateStats('player', combatState.player);
   updateStats('enemy', combatState.enemy);
   updateCombatState();
@@ -155,24 +160,24 @@ function updateUI(): void {
 function updateStats(side: 'player' | 'enemy', combatant: Combatant): void {
   const container = document.getElementById(`${side}-stats`);
   if (!container) return;
-  
+
   const weapon = getCurrentWeapon(combatant);
-  
+
   const nameEl = container.querySelector('.stat-name');
   const typeEl = container.querySelector('.stat-type');
   if (nameEl) nameEl.textContent = combatant.name;
   if (typeEl) typeEl.textContent = combatant.type;
-  
+
   // HP
   const hpText = `${combatant.currentLifeForce}/${combatant.maxLifeForce}`;
   const hpTextEl = container.querySelector('.hp-text');
   if (hpTextEl) hpTextEl.textContent = hpText;
-  
+
   const hpPercent = (combatant.currentLifeForce / combatant.maxLifeForce) * 100;
   const hpFill = container.querySelector('.hp-fill') as HTMLElement;
   if (hpFill) {
     hpFill.style.width = hpPercent + '%';
-    
+
     // HP bar color
     hpFill.classList.remove('low', 'medium');
     if (hpPercent <= 25) {
@@ -181,31 +186,32 @@ function updateStats(side: 'player' | 'enemy', combatant: Combatant): void {
       hpFill.classList.add('medium');
     }
   }
-  
+
   // Stats
   const strEl = container.querySelector('.stat-str');
   if (strEl) strEl.textContent = combatant.strength.toString();
-  
+
   const armorPenalty = combatant.armor?.dexterityPenalty ?? 0;
-  const dexText = armorPenalty > 0 
-    ? `${combatant.effectiveDexterity} (${combatant.baseDexterity}-${armorPenalty})`
-    : combatant.effectiveDexterity.toString();
+  const dexText =
+    armorPenalty > 0
+      ? `${combatant.effectiveDexterity} (${combatant.baseDexterity}-${armorPenalty})`
+      : combatant.effectiveDexterity.toString();
   const dexEl = container.querySelector('.stat-dex');
   if (dexEl) dexEl.textContent = dexText;
-  
+
   const weaponEl = container.querySelector('.stat-weapon');
   if (weaponEl) weaponEl.textContent = `${weapon.name} (${weapon.power})`;
-  
+
   const armorStrength = combatant.armor?.strength ?? 0;
   const armorName = combatant.armor?.name ?? 'None';
   const armorEl = container.querySelector('.stat-armor');
   if (armorEl) armorEl.textContent = `${armorName} (${armorStrength})`;
-  
+
   // Status
   const statusDiv = container.querySelector('.stat-status');
   if (statusDiv) {
     statusDiv.classList.remove('normal', 'weak', 'unconscious');
-    
+
     if (combatant.isUnconscious) {
       statusDiv.textContent = 'UNCONSCIOUS';
       statusDiv.classList.add('unconscious');
@@ -221,12 +227,16 @@ function updateStats(side: 'player' | 'enemy', combatant: Combatant): void {
 
 // Update combat state
 function updateCombatState(): void {
-  const rangeText = combatState.range === 'close_quarters' ? 'Close Quarters' : 'Adjacent';
+  const rangeText =
+    combatState.range === 'close_quarters' ? 'Close Quarters' : 'Adjacent';
   const rangeEl = document.getElementById('combat-range-text');
   if (rangeEl) rangeEl.textContent = rangeText;
-  
+
   if (!combatState.enemy) return;
-  const turnText = combatState.currentTurn === 'player' ? 'YOUR TURN' : `${combatState.enemy.name}'s Turn`;
+  const turnText =
+    combatState.currentTurn === 'player'
+      ? 'YOUR TURN'
+      : `${combatState.enemy.name}'s Turn`;
   const turnEl = document.getElementById('current-turn-text');
   if (turnEl) turnEl.textContent = turnText;
 }
@@ -235,10 +245,10 @@ function updateCombatState(): void {
 function updateTurnHighlight(): void {
   const playerStats = document.getElementById('player-stats');
   const enemyStats = document.getElementById('enemy-stats');
-  
+
   if (playerStats) playerStats.classList.remove('active-turn');
   if (enemyStats) enemyStats.classList.remove('active-turn');
-  
+
   if (combatState.currentTurn === 'player' && playerStats) {
     playerStats.classList.add('active-turn');
   } else if (enemyStats) {
@@ -249,19 +259,29 @@ function updateTurnHighlight(): void {
 // Update action buttons
 function updateActionButtons(): void {
   if (!combatState.player) return;
-  
+
   const actionsPanel = document.getElementById('actions-panel') as HTMLElement;
-  const attackBtn = document.getElementById('action-attack') as HTMLButtonElement;
-  const defendBtn = document.getElementById('action-defend') as HTMLButtonElement;
-  const tackleBtn = document.getElementById('action-tackle') as HTMLButtonElement;
-  const disengageBtn = document.getElementById('action-disengage') as HTMLButtonElement;
+  const attackBtn = document.getElementById(
+    'action-attack',
+  ) as HTMLButtonElement;
+  const defendBtn = document.getElementById(
+    'action-defend',
+  ) as HTMLButtonElement;
+  const tackleBtn = document.getElementById(
+    'action-tackle',
+  ) as HTMLButtonElement;
+  const disengageBtn = document.getElementById(
+    'action-disengage',
+  ) as HTMLButtonElement;
   const runBtn = document.getElementById('action-run') as HTMLButtonElement;
 
   // Disable all if not player's turn or game over
-  const isPlayerTurn = combatState.currentTurn === 'player' && !combatState.isGameOver;
+  const isPlayerTurn =
+    combatState.currentTurn === 'player' && !combatState.isGameOver;
   const isUnconscious = combatState.player.isUnconscious;
 
-  if (actionsPanel) actionsPanel.style.opacity = isPlayerTurn && !isUnconscious ? '1' : '0.5';
+  if (actionsPanel)
+    actionsPanel.style.opacity = isPlayerTurn && !isUnconscious ? '1' : '0.5';
 
   if (attackBtn) attackBtn.disabled = !isPlayerTurn || isUnconscious;
   if (defendBtn) defendBtn.disabled = !isPlayerTurn || isUnconscious;
@@ -287,22 +307,26 @@ function updateActionButtons(): void {
 function updateCombatLog(): void {
   const logDiv = document.getElementById('combat-log');
   if (!logDiv) return;
-  
+
   logDiv.innerHTML = '';
 
-  combatState.combatLog.forEach(message => {
+  combatState.combatLog.forEach((message) => {
     const line = document.createElement('div');
-    
+
     if (message === '---') {
       line.className = 'separator';
-    } else if (message.includes('VICTORY') || message.includes('DEFEAT') || message.includes('wins')) {
+    } else if (
+      message.includes('VICTORY') ||
+      message.includes('DEFEAT') ||
+      message.includes('wins')
+    ) {
       line.className = 'success';
     } else if (message.includes('damage') || message.includes('takes')) {
       line.className = 'damage';
     } else if (message.includes('Turn')) {
       line.className = 'important';
     }
-    
+
     line.textContent = message;
     logDiv.appendChild(line);
   });
@@ -314,7 +338,11 @@ function updateCombatLog(): void {
 // Player action
 async function playerAction(action: string): Promise<void> {
   if (!combatState.player || !combatState.enemy) return;
-  if (appState.isProcessing || combatState.currentTurn !== 'player' || combatState.isGameOver) {
+  if (
+    appState.isProcessing ||
+    combatState.currentTurn !== 'player' ||
+    combatState.isGameOver
+  ) {
     return;
   }
 
@@ -327,7 +355,7 @@ async function playerAction(action: string): Promise<void> {
     updateUI();
     nextTurn();
     appState.isProcessing = false;
-    
+
     setTimeout(() => executeEnemyTurn(), 1000);
     return;
   }
@@ -342,19 +370,19 @@ async function playerAction(action: string): Promise<void> {
       attack(combatState.player, defender, wasDefending);
       performedAction = true;
       break;
-      
+
     case 'defend':
       defend(combatState.player);
       combatState.player.lastAction = 'defend';
       performedAction = true;
       break;
-      
+
     case 'tackle':
       tackle(combatState.player, defender);
       combatState.combatLog.push('---');
       updateCombatLog();
       updateUI();
-      
+
       const followUp = await promptFollowUpAction(['attack', 'defend']);
       if (followUp === 'attack') {
         attack(combatState.player, defender, wasDefending);
@@ -364,13 +392,13 @@ async function playerAction(action: string): Promise<void> {
       }
       performedAction = true;
       break;
-      
+
     case 'disengage':
       disengage(combatState.player, defender);
       combatState.combatLog.push('---');
       updateCombatLog();
       updateUI();
-      
+
       const followUp2 = await promptFollowUpAction(['attack', 'defend']);
       if (followUp2 === 'attack') {
         attack(combatState.player, defender, wasDefending);
@@ -380,7 +408,7 @@ async function playerAction(action: string): Promise<void> {
       }
       performedAction = true;
       break;
-      
+
     case 'run':
       runAway(combatState.player);
       performedAction = true;
@@ -402,7 +430,7 @@ async function playerAction(action: string): Promise<void> {
     // Next turn
     nextTurn();
     updateUI();
-    
+
     appState.isProcessing = false;
 
     // Enemy turn
@@ -419,21 +447,25 @@ function promptFollowUpAction(actions: string[]): Promise<string> {
       attack: document.getElementById('action-attack') as HTMLButtonElement,
       defend: document.getElementById('action-defend') as HTMLButtonElement,
       tackle: document.getElementById('action-tackle') as HTMLButtonElement,
-      disengage: document.getElementById('action-disengage') as HTMLButtonElement,
-      run: document.getElementById('action-run') as HTMLButtonElement
+      disengage: document.getElementById(
+        'action-disengage',
+      ) as HTMLButtonElement,
+      run: document.getElementById('action-run') as HTMLButtonElement,
     };
 
     // Temporarily modify buttons
     const cleanup = () => {
-      Object.values(originalButtons).forEach(btn => {
+      Object.values(originalButtons).forEach((btn) => {
         if (btn) btn.disabled = false;
       });
-      if (originalButtons.tackle) originalButtons.tackle.classList.remove('hidden');
-      if (originalButtons.disengage) originalButtons.disengage.classList.add('hidden');
+      if (originalButtons.tackle)
+        originalButtons.tackle.classList.remove('hidden');
+      if (originalButtons.disengage)
+        originalButtons.disengage.classList.add('hidden');
     };
 
     // Disable non-allowed actions
-    Object.keys(originalButtons).forEach(key => {
+    Object.keys(originalButtons).forEach((key) => {
       const btn = originalButtons[key as keyof typeof originalButtons];
       if (btn && !actions.includes(key)) {
         btn.disabled = true;
@@ -450,10 +482,14 @@ function promptFollowUpAction(actions: string[]): Promise<string> {
     const defendHandler = () => handler('defend');
 
     if (originalButtons.attack) {
-      originalButtons.attack.addEventListener('click', attackHandler, { once: true });
+      originalButtons.attack.addEventListener('click', attackHandler, {
+        once: true,
+      });
     }
     if (originalButtons.defend) {
-      originalButtons.defend.addEventListener('click', defendHandler, { once: true });
+      originalButtons.defend.addEventListener('click', defendHandler, {
+        once: true,
+      });
     }
   });
 }
@@ -483,7 +519,7 @@ function executeEnemyTurn(): void {
 
   setTimeout(() => {
     if (!combatState.enemy || !combatState.player) return;
-    
+
     if (action === 'attack') {
       attack(combatState.enemy, defender, wasDefending);
     } else if (action === 'defend') {
@@ -494,7 +530,7 @@ function executeEnemyTurn(): void {
       combatState.combatLog.push('---');
       updateCombatLog();
       updateUI();
-      
+
       setTimeout(() => {
         if (!combatState.enemy || !combatState.player) return;
         attack(combatState.enemy, defender, wasDefending);
@@ -506,7 +542,7 @@ function executeEnemyTurn(): void {
       combatState.combatLog.push('---');
       updateCombatLog();
       updateUI();
-      
+
       setTimeout(() => {
         if (!combatState.enemy || !combatState.player) return;
         attack(combatState.enemy, defender, wasDefending);
@@ -536,19 +572,19 @@ function finishEnemyTurn(): void {
 // Enemy AI
 function getEnemyAction(): string {
   if (!combatState.enemy) return 'attack';
-  
+
   const rand = Math.random();
-  
+
   // 85% attack
   if (rand < 0.85) {
     return 'attack';
   }
-  
+
   // 10% defend if weak
   if (rand < 0.95 && combatState.enemy.isWeak) {
     return 'defend';
   }
-  
+
   // 5% tactical
   if (combatState.range === 'adjacent') {
     return 'tackle';
@@ -560,7 +596,7 @@ function getEnemyAction(): string {
 // Show game over
 function showGameOver(): void {
   if (!combatState.player || !combatState.enemy) return;
-  
+
   const panel = document.getElementById('game-over-panel');
   const title = document.getElementById('game-over-title') as HTMLElement;
   const message = document.getElementById('game-over-message');
@@ -594,20 +630,24 @@ function attachEventListeners(): void {
   }
 
   const actionAttack = document.getElementById('action-attack');
-  if (actionAttack) actionAttack.addEventListener('click', () => playerAction('attack'));
+  if (actionAttack)
+    actionAttack.addEventListener('click', () => playerAction('attack'));
 
   const actionDefend = document.getElementById('action-defend');
-  if (actionDefend) actionDefend.addEventListener('click', () => playerAction('defend'));
+  if (actionDefend)
+    actionDefend.addEventListener('click', () => playerAction('defend'));
 
   const actionTackle = document.getElementById('action-tackle');
-  if (actionTackle) actionTackle.addEventListener('click', () => playerAction('tackle'));
+  if (actionTackle)
+    actionTackle.addEventListener('click', () => playerAction('tackle'));
 
   const actionDisengage = document.getElementById('action-disengage');
-  if (actionDisengage) actionDisengage.addEventListener('click', () => playerAction('disengage'));
+  if (actionDisengage)
+    actionDisengage.addEventListener('click', () => playerAction('disengage'));
 
   const actionRun = document.getElementById('action-run');
   if (actionRun) actionRun.addEventListener('click', () => playerAction('run'));
-  
+
   const newCombatBtn = document.getElementById('new-combat-btn');
   if (newCombatBtn) {
     newCombatBtn.addEventListener('click', () => {

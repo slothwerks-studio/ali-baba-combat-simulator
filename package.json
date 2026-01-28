@@ -10,7 +10,8 @@
     "copy": "mkdir -p dist && cp public/index.html public/styles.css dist/",
     "compile": "tsc",
     "build": "npm run clean && npm run compile && npm run copy",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "format": "prettier --write ."
   },
   "keywords": [
     "combat",

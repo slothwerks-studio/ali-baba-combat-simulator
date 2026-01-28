@@ -1,8 +1,23 @@
 // Type definitions for the combat simulator
 
-export type WeaponType = 'dagger' | 'sword' | 'fists' | 'teeth' | 'claws' | 'nails';
+export type WeaponType =
+  | 'dagger'
+  | 'sword'
+  | 'fists'
+  | 'teeth'
+  | 'claws'
+  | 'nails';
 
-export type CharacterType = 'human' | 'elf' | 'halfling' | 'dwarf' | 'thief' | 'zombie' | 'tiger' | 'dragon' | 'other';
+export type CharacterType =
+  | 'human'
+  | 'elf'
+  | 'halfling'
+  | 'dwarf'
+  | 'thief'
+  | 'zombie'
+  | 'tiger'
+  | 'dragon'
+  | 'other';
 
 export interface Weapon {
   name: string;

@@ -196,7 +196,9 @@ h3 {
 .hp-fill {
   background: linear-gradient(90deg, #4caf50, #8bc34a);
   height: 100%;
-  transition: width 0.3s ease, background 0.3s ease;
+  transition:
+    width 0.3s ease,
+    background 0.3s ease;
   border-radius: 10px;
 }
 
@@ -264,12 +266,14 @@ h3 {
   align-items: center;
 }
 
-.combat-range, .current-turn {
+.combat-range,
+.current-turn {
   font-size: 1.1rem;
   font-weight: 600;
 }
 
-.combat-range span, .current-turn span {
+.combat-range span,
+.current-turn span {
   color: #667eea;
   margin-left: 0.5rem;
 }

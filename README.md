@@ -6,7 +6,7 @@ Turn-based 1v1 combat simulator inspired by the classic Ali Baba game and Advanc
 
 **[Launch Combat Simulator](https://[YOUR-USERNAME].github.io/ali-baba-combat-simulator/)**
 
-*(Update the link above with your GitHub username after deploying)*
+_(Update the link above with your GitHub username after deploying)_
 
 ## Overview
 
@@ -15,6 +15,7 @@ This project simulates the combat mechanics from the [classic Ali Baba game](htt
 ## Character Model
 
 The original game shows characters with these attributes:
+
 - Name
 - Lifeforce: The number of remaining hit points, or the amount of damage the character can take before it perishes (decreases as damage is taken)
 - Strength
@@ -27,6 +28,7 @@ The original game shows characters with these attributes:
 The combat simulator uses the following character attributes:
 
 ### Core Attributes
+
 - **name**: Character identifier
 - **characterType**: Race (dwarf, halfling, elf, human)
 - **maxLifeForce**: Maximum health/hit points (up to 26)
@@ -57,11 +59,12 @@ The combat simulator uses the following character attributes:
 ## Combat Mechanics
 
 Based on classic AD&D-inspired rules:
+
 - **Initiative**: DEX-based roll determines who goes first (rolled once per combat)
 - **To-Hit**: Opposed DEX rolls determine if attacks land
 - **Damage**: `random(1, STR) + Weapon Power - Armor Class`
 - **Status Effects**: Characters become weak at 50% HP (STR -3), unconscious at 10% HP
-- **Character Bonuses**: 
+- **Character Bonuses**:
   - **Dwarves**: +3 damage at adjacent range, +2 to hit in close quarters
   - **Humans**: +3 damage at adjacent range
   - **Halflings**: +3 to hit in close quarters
@@ -106,22 +109,26 @@ MVP.md              # Phase 1 implementation spec
 ## Local Development
 
 ### Prerequisites
+
 - Node.js (LTS preferred)
 - npm
 
 ### Setup and Build
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Build the project (compile TypeScript + copy assets to dist/):
+
 ```bash
 npm run build
 ```
 
 3. Development mode (auto-rebuild TypeScript on changes):
+
 ```bash
 npm run dev
 ```
@@ -145,6 +152,7 @@ Then navigate to `http://localhost:8000`
 The project is deployed to GitHub Pages from the `dist/` folder. The `dist/` folder is committed to the repository and contains the built application ready for deployment.
 
 To deploy:
+
 1. Build the project: `npm run build`
 2. Commit the changes including `dist/`
 3. Push to GitHub

@@ -1,119 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ali Baba Combat Simulator</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div id="app">
-    <!-- Character Selection Screen -->
-    <div id="character-selection" class="screen active">
-      <h1>Ali Baba Combat Simulator</h1>
-      <h2>Choose Your Character</h2>
-      <div id="character-grid" class="card-grid"></div>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ali Baba Combat Simulator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Character Selection Screen -->
+      <div id="character-selection" class="screen active">
+        <h1>Ali Baba Combat Simulator</h1>
+        <h2>Choose Your Character</h2>
+        <div id="character-grid" class="card-grid"></div>
+      </div>
 
-    <!-- Creature Selection Screen -->
-    <div id="creature-selection" class="screen">
-      <h1>Ali Baba Combat Simulator</h1>
-      <h2>Choose Your Opponent</h2>
-      <button id="back-to-characters" class="back-btn">← Back to Characters</button>
-      <div id="creature-grid" class="card-grid"></div>
-    </div>
+      <!-- Creature Selection Screen -->
+      <div id="creature-selection" class="screen">
+        <h1>Ali Baba Combat Simulator</h1>
+        <h2>Choose Your Opponent</h2>
+        <button id="back-to-characters" class="back-btn">
+          ← Back to Characters
+        </button>
+        <div id="creature-grid" class="card-grid"></div>
+      </div>
 
-    <!-- Combat Screen -->
-    <div id="combat-screen" class="screen">
-      <h1>Ali Baba Combat Simulator</h1>
-      
-      <div class="combat-container">
-        <!-- Stats Panel -->
-        <div class="stats-panel">
-          <!-- Player Stats -->
-          <div id="player-stats" class="combatant-stats player-side">
-            <h3>Player</h3>
-            <div class="stat-name"></div>
-            <div class="stat-type"></div>
-            <div class="stat-hp">
-              <label>HP:</label>
-              <span class="hp-text"></span>
-              <div class="hp-bar">
-                <div class="hp-fill"></div>
+      <!-- Combat Screen -->
+      <div id="combat-screen" class="screen">
+        <h1>Ali Baba Combat Simulator</h1>
+
+        <div class="combat-container">
+          <!-- Stats Panel -->
+          <div class="stats-panel">
+            <!-- Player Stats -->
+            <div id="player-stats" class="combatant-stats player-side">
+              <h3>Player</h3>
+              <div class="stat-name"></div>
+              <div class="stat-type"></div>
+              <div class="stat-hp">
+                <label>HP:</label>
+                <span class="hp-text"></span>
+                <div class="hp-bar">
+                  <div class="hp-fill"></div>
+                </div>
               </div>
-            </div>
-            <div class="stat-row"><label>STR:</label> <span class="stat-str"></span></div>
-            <div class="stat-row">
-              <label>DEX:</label> 
-              <span class="stat-dex"></span>
-            </div>
-            <div class="stat-row"><label>Weapon:</label> <span class="stat-weapon"></span></div>
-            <div class="stat-row"><label>Armor:</label> <span class="stat-armor"></span></div>
-            <div class="stat-status"></div>
-          </div>
-
-          <!-- VS Divider -->
-          <div class="vs-divider">VS</div>
-
-          <!-- Enemy Stats -->
-          <div id="enemy-stats" class="combatant-stats enemy-side">
-            <h3>Enemy</h3>
-            <div class="stat-name"></div>
-            <div class="stat-type"></div>
-            <div class="stat-hp">
-              <label>HP:</label>
-              <span class="hp-text"></span>
-              <div class="hp-bar">
-                <div class="hp-fill"></div>
+              <div class="stat-row">
+                <label>STR:</label> <span class="stat-str"></span>
               </div>
+              <div class="stat-row">
+                <label>DEX:</label>
+                <span class="stat-dex"></span>
+              </div>
+              <div class="stat-row">
+                <label>Weapon:</label> <span class="stat-weapon"></span>
+              </div>
+              <div class="stat-row">
+                <label>Armor:</label> <span class="stat-armor"></span>
+              </div>
+              <div class="stat-status"></div>
             </div>
-            <div class="stat-row"><label>STR:</label> <span class="stat-str"></span></div>
-            <div class="stat-row">
-              <label>DEX:</label> 
-              <span class="stat-dex"></span>
+
+            <!-- VS Divider -->
+            <div class="vs-divider">VS</div>
+
+            <!-- Enemy Stats -->
+            <div id="enemy-stats" class="combatant-stats enemy-side">
+              <h3>Enemy</h3>
+              <div class="stat-name"></div>
+              <div class="stat-type"></div>
+              <div class="stat-hp">
+                <label>HP:</label>
+                <span class="hp-text"></span>
+                <div class="hp-bar">
+                  <div class="hp-fill"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <label>STR:</label> <span class="stat-str"></span>
+              </div>
+              <div class="stat-row">
+                <label>DEX:</label>
+                <span class="stat-dex"></span>
+              </div>
+              <div class="stat-row">
+                <label>Weapon:</label> <span class="stat-weapon"></span>
+              </div>
+              <div class="stat-row">
+                <label>Armor:</label> <span class="stat-armor"></span>
+              </div>
+              <div class="stat-status"></div>
             </div>
-            <div class="stat-row"><label>Weapon:</label> <span class="stat-weapon"></span></div>
-            <div class="stat-row"><label>Armor:</label> <span class="stat-armor"></span></div>
-            <div class="stat-status"></div>
           </div>
-        </div>
 
-        <!-- Combat State -->
-        <div class="combat-state-panel">
-          <div class="combat-range">Combat Range: <span id="combat-range-text">Adjacent</span></div>
-          <div class="current-turn">Current Turn: <span id="current-turn-text">---</span></div>
-        </div>
-
-        <!-- Actions Panel -->
-        <div id="actions-panel" class="actions-panel">
-          <h3>Your Actions</h3>
-          <div id="action-buttons" class="action-buttons">
-            <button id="action-attack" class="action-btn">Attack</button>
-            <button id="action-defend" class="action-btn">Defend</button>
-            <button id="action-tackle" class="action-btn">Tackle</button>
-            <button id="action-disengage" class="action-btn">Disengage</button>
-            <button id="action-run" class="action-btn danger">Run Away</button>
+          <!-- Combat State -->
+          <div class="combat-state-panel">
+            <div class="combat-range">
+              Combat Range: <span id="combat-range-text">Adjacent</span>
+            </div>
+            <div class="current-turn">
+              Current Turn: <span id="current-turn-text">---</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Combat Log -->
-        <div class="combat-log-panel">
-          <h3>Combat Log</h3>
-          <div id="combat-log" class="combat-log"></div>
-        </div>
+          <!-- Actions Panel -->
+          <div id="actions-panel" class="actions-panel">
+            <h3>Your Actions</h3>
+            <div id="action-buttons" class="action-buttons">
+              <button id="action-attack" class="action-btn">Attack</button>
+              <button id="action-defend" class="action-btn">Defend</button>
+              <button id="action-tackle" class="action-btn">Tackle</button>
+              <button id="action-disengage" class="action-btn">
+                Disengage
+              </button>
+              <button id="action-run" class="action-btn danger">
+                Run Away
+              </button>
+            </div>
+          </div>
 
-        <!-- Game Over Panel -->
-        <div id="game-over-panel" class="game-over-panel hidden">
-          <div class="game-over-content">
-            <h2 id="game-over-title"></h2>
-            <p id="game-over-message"></p>
-            <button id="new-combat-btn" class="action-btn">New Combat</button>
+          <!-- Combat Log -->
+          <div class="combat-log-panel">
+            <h3>Combat Log</h3>
+            <div id="combat-log" class="combat-log"></div>
+          </div>
+
+          <!-- Game Over Panel -->
+          <div id="game-over-panel" class="game-over-panel hidden">
+            <div class="game-over-content">
+              <h2 id="game-over-title"></h2>
+              <p id="game-over-message"></p>
+              <button id="new-combat-btn" class="action-btn">New Combat</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="js/app.js"></script>
-</body>
+    <script type="module" src="js/app.js"></script>
+  </body>
 </html>
