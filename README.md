@@ -1,71 +1,190 @@
 # Ali Baba Combat Simulator
-A TypeScript combat simulator based on the 1982 Apple II game "Ali Baba and the Forty Thieves"
+
+Turn-based 1v1 combat simulator inspired by the classic Ali Baba game and Advanced Dungeons & Dragons mechanics.
+
+## 🎮 Play Now
+
+**[Launch Combat Simulator](https://[YOUR-USERNAME].github.io/ali-baba-combat-simulator/)**
+
+_(Update the link above with your GitHub username after deploying)_
 
 ## Overview
-This project simulates the combat mechanics from the classic game, using D&D-inspired turn-based combat rules.
+
+This project simulates the combat mechanics from the [classic Ali Baba game](https://archive.org/details/Ali_Baba_and_the_Forty_Thieves_Dr._Death_crack), using AD&D-inspired turn-based combat rules with opposed dice rolls, character-specific bonuses, and dynamic combat ranges.
 
 ## Character Model
 
-Each character in the combat system has the following attributes:
+The original game shows characters with these attributes:
+
+- Name
+- Lifeforce: The number of remaining hit points, or the amount of damage the character can take before it perishes (decreases as damage is taken)
+- Strength
+- Dexterity
+- Speed: The number of spaces the character can move per turn (not used in this application)
+- Sword
+- Dagger
+- Armor
+
+The combat simulator uses the following character attributes:
 
 ### Core Attributes
-- **name**: Character identifier
-- **lifeForce**: Health/hit points
-- **dexterity**: Ability to hit opponents and dodge attacks
-- **strength**: Physical power affecting damage
-- **armor**: Armor class for defense
-- **sword**: Long-range weapon strength
-- **dagger**: Short-range weapon strength
 
-### TypeScript Interface (Draft)
-```typescript
-interface Character {
-  name: string;
-  lifeForce: number;
-  dexterity: number;
-  strength: number;
-  armor: number;
-  sword: number;
-  dagger: number;
-}
-```
+- **name**: Character identifier
+- **characterType**: Race (dwarf, halfling, elf, human)
+- **maxLifeForce**: Maximum health/hit points (up to 26)
+- **currentLifeForce**: Current HP
+- **strength**: Physical power (1-20, affects damage)
+- **baseDexterity**: Agility (1-24, affects hit chance)
+- **effectiveDexterity**: Base DEX - Armor penalty
+- **weapon**: Sword for adjacent combat
+- **dagger**: Dagger for close quarters combat
+- **armor**: Provides AC but reduces DEX
+
+## Features
+
+- **4 Playable Characters**: Dwarf, Halfling, Elf, and Human - each with unique combat bonuses
+- **4 Enemy Creatures**: Face off against a Thief (Jami), Zombie, Tiger, or Dragon
+- **Turn-Based Combat**: Initiative-based combat with alternating turns
+- **Multiple Combat Actions**:
+  - Attack with sword or dagger
+  - Defend for defensive bonus (+5 to defense roll)
+  - Tackle to enter close quarters combat
+  - Disengage to create distance
+  - Run away (if you must!)
+- **Two Combat Ranges**: Adjacent (sword) vs Close Quarters (dagger)
+- **Character-Specific Bonuses**: Different races excel in different combat scenarios
+- **Real-Time Stat Tracking**: Watch HP, status effects, and combat state update live
+- **Detailed Combat Log**: See all dice rolls and combat resolution
 
 ## Combat Mechanics
-_To be defined_
+
+Based on classic AD&D-inspired rules:
+
+- **Initiative**: DEX-based roll determines who goes first (rolled once per combat)
+- **To-Hit**: Opposed DEX rolls determine if attacks land
+- **Damage**: `random(1, STR) + Weapon Power - Armor Class`
+- **Status Effects**: Characters become weak at 50% HP (STR -3), unconscious at 10% HP
+- **Character Bonuses**:
+  - **Dwarves**: +3 damage at adjacent range, +2 to hit in close quarters
+  - **Humans**: +3 damage at adjacent range
+  - **Halflings**: +3 to hit in close quarters
+  - **Elves**: +3 to hit in close quarters
 
 ## Tech Stack
-- TypeScript (compiles to JavaScript)
-- HTML interface (planned)
 
-## Setup & Development
+- TypeScript (ES2020)
+- Functional programming approach
+- HTML5 & CSS3
+- ES Modules
+- GitHub Pages deployment
+- Prettier for code formatting
+- ESLint with TypeScript support for code quality
 
-### Initial Setup
+## Documentation
+
+- [Combat System Design](combat.md) - Detailed combat mechanics and formulas
+- [MVP Specification](MVP.md) - Implementation requirements and specifications
+
+## Project Structure
+
+```
+src/js/             # TypeScript source files
+  app.ts            # UI controller
+  engine.ts         # Combat engine
+  data.ts           # Character/creature data & type definitions
+  dice.ts           # Random number utilities
+  types.ts          # TypeScript type definitions
+  version.ts        # Auto-generated version info
+public/             # Static HTML/CSS assets
+  index.html        # Main HTML file
+  styles.css        # Application styles
+dist/               # Build output (deployed to GitHub Pages)
+  index.html        # Copied from public/
+  styles.css        # Copied from public/
+  js/               # Compiled JavaScript from TypeScript
+scripts/            # Build scripts
+  generate-version.js
+combat.md           # Combat design document
+MVP.md              # Phase 1 implementation spec
+```
+
+## Local Development
+
+### Prerequisites
+
+- Node.js (LTS preferred)
+- npm
+
+### Setup and Build
+
+1. Install dependencies:
+
 ```bash
-# Install dependencies
 npm install
 ```
 
-### Local Development
+2. Build the project (compile TypeScript + copy assets to dist/):
+
 ```bash
-# Run TypeScript compiler in watch mode
-# This will automatically recompile when you make changes
+npm run build
+```
+
+3. Development mode (auto-rebuild TypeScript on changes):
+
+```bash
 npm run dev
 ```
 
-### Build for Production
+### Available Scripts
+
+- **`npm run build`** - Full production build (clean, lint, compile, copy)
+- **`npm run dev`** - Watch mode for TypeScript compilation
+- **`npm run clean`** - Remove dist/ folder
+- **`npm run compile`** - Compile TypeScript to JavaScript
+- **`npm run copy`** - Copy static assets to dist/
+- **`npm run format`** - Format all files with Prettier
+- **`npm run lint`** - Check code quality with ESLint
+- **`npm run lint:fix`** - Auto-fix ESLint issues
+
+Note: The build process automatically runs linting before compilation to catch issues early.
+
+### Running the Web Interface
+
+After building, open `dist/index.html` in a web browser, or use a local development server:
+
 ```bash
-# Compile TypeScript to JavaScript
-npm run build
+# Using Python 3
+cd dist && python3 -m http.server 8000
 
-# Run the compiled JavaScript
-npm start
+# Using Node.js http-server (install globally: npm i -g http-server)
+cd dist && http-server
 ```
 
-### Project Structure
-```
-src/          - TypeScript source files
-dist/         - Compiled JavaScript output (generated)
-```
+Then navigate to `http://localhost:8000`
 
 ## Deployment
-_To be determined_
+
+The project is deployed to GitHub Pages from the `dist/` folder. The `dist/` folder is committed to the repository and contains the built application ready for deployment.
+
+To deploy:
+
+1. Build the project: `npm run build`
+2. Commit the changes including `dist/`
+3. Push to GitHub
+4. Merge changes to `main`; GitHub Pages will automatically serve from the `dist/` folder
+
+## Future Enhancements
+
+- Equipment customization with random stat ranges
+- Character creation and rolling
+- Multiple enemy combat
+- Weapon impale critical hit mechanic
+- Combat statistics tracking
+
+## License
+
+MIT
+
+## Credits
+
+Inspired by the classic Ali Baba game and Advanced Dungeons & Dragons combat systems.
